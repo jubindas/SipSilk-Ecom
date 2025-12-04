@@ -1,8 +1,6 @@
-"use client";
-
 import { useState } from "react";
 
-import { Eye, EyeOff, Shield, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -18,60 +16,49 @@ import { Input } from "@/components/ui/input";
 
 import { Label } from "@/components/ui/label";
 
+import { useAuthStore } from "@/store/useAuthStore";
+
 import { useNavigate } from "react-router-dom";
-
-import { useMutation } from "@tanstack/react-query";
-
-import axios from "axios";
-
-import { useAuth } from "@/hooks/use-auth";
-
-import { routeUrl } from "@/lib/urls";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
 
+  const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
 
-  const { login } = useAuth();
+  const handleLogin = async () => {
+    const fakeUser = {
+      id: "1",
+      name: "Jubin",
+      email: email,
+      status: "active",
+      user_type: "admin",
+      updated_at: null,
+    };
 
-  const mutation = useMutation({
-    mutationFn: async () => {
-      const response = await axios.post(`${routeUrl}/admin/login`, {
-        email,
-        password,
-      });
-      return response.data;
-    },
-    onSuccess: (data) => {
-      if (data.status) {
-        login(data.user, data.access_token);
-        navigate("/dashboard");
-      }
-    },
-    onError: () => {
-      alert("Invalid credentials. Please try again.");
-    },
-  });
+    const fakeToken = "sample-jwt-token-123";
+
+    login(fakeUser, fakeToken);
+
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-black">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-white/10 via-gray-400/10 to-transparent rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-linear-to-tl from-white/10 via-gray-400/10 to-transparent rounded-full blur-3xl animate-pulse"></div>
         <div
-          className="absolute top-1/3 right-1/4 w-72 h-72 bg-gradient-to-bl from-white/15 via-gray-300/8 to-transparent rounded-full blur-2xl animate-pulse"
+          className="absolute top-1/3 right-1/4 w-72 h-72 bg-linear-to-tl from-white/15 via-gray-300/8 to-transparent rounded-full blur-2xl animate-pulse"
           style={{ animationDelay: "1s" }}
         ></div>
         <div
-          className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-gradient-to-tr from-white/12 via-gray-500/10 to-transparent rounded-full blur-3xl animate-pulse"
+          className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-linear-to-tl from-white/12 via-gray-500/10 to-transparent rounded-full blur-3xl animate-pulse"
           style={{ animationDelay: "2s" }}
         ></div>
         <div
-          className="absolute bottom-1/3 right-1/3 w-64 h-64 bg-gradient-to-tl from-white/8 via-gray-400/12 to-transparent rounded-full blur-2xl animate-pulse"
+          className="absolute bottom-1/3 right-1/3 w-64 h-64 bg-linear-to-tl from-white/8 via-gray-400/12 to-transparent rounded-full blur-2xl animate-pulse"
           style={{ animationDelay: "0.5s" }}
         ></div>
       </div>
@@ -89,12 +76,9 @@ export default function LoginForm() {
           <div className="flex justify-center mb-4">
             <div className="relative">
               <img src="/logo-new.jpg" alt="Logo" className="" />
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 hidden items-center justify-center shadow-lg">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <CardTitle className="text-2xl font-bold bg-linear-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Welcome Back
           </CardTitle>
           <p className="text-sm text-gray-400 mt-2">
@@ -103,6 +87,7 @@ export default function LoginForm() {
         </CardHeader>
 
         <CardContent className="space-y-6">
+          {/* Email */}
           <div className="space-y-2">
             <Label
               htmlFor="email"
@@ -111,7 +96,7 @@ export default function LoginForm() {
               Email Address
             </Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
                 id="email"
                 type="email"
@@ -123,6 +108,7 @@ export default function LoginForm() {
             </div>
           </div>
 
+          {/* Password */}
           <div className="space-y-2">
             <Label
               htmlFor="password"
@@ -131,7 +117,7 @@ export default function LoginForm() {
               Password
             </Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -159,18 +145,10 @@ export default function LoginForm() {
 
         <CardFooter className="pt-2">
           <Button
-            className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
-            onClick={() => mutation.mutate()}
-            disabled={mutation.isPending}
+            onClick={handleLogin}
+            className="w-full h-12 bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
           >
-            {mutation.isPending ? (
-              <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                <span>Signing in...</span>
-              </div>
-            ) : (
-              "Sign In"
-            )}
+            Sign In
           </Button>
         </CardFooter>
       </Card>
