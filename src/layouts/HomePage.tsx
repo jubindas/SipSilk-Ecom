@@ -1,15 +1,17 @@
 import CategoriesList from "@/components/CategoriesList";
 import HomeCarousel from "../pages/HomeCarousel";
+import PopulerItems from "@/pages/PopulerItems";
+import BeforeAfterSlider from "@/pages/BeforeAfterSlider";
 
 export default function HomePage() {
   return (
-    <div>
-      <CategoriesList />
-      <HomeCarousel />
-
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold mb-4">Featured Products</h2>
+    <>
+      <div className="px-6 py-6">
+        <CategoriesList />
+        <HomeCarousel />
+        <PopulerItems />
       </div>
-    </div>
+      <BeforeAfterSlider />
+    </>
   );
 }

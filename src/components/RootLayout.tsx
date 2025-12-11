@@ -4,11 +4,14 @@ import Header from "./Navbar";
 
 import Footer from "./Footer";
 
+import ScrollToTop from "./ScrollToTop";
+
 export default function RootLayout() {
   return (
     <>
+      <ScrollToTop />
       <Header />
-      <main className="min-h-[80vh] container mx-auto px-6 py-6">
+      <main className="min-h-[80vh] container mx-auto">
         <Outlet />
       </main>
       <Footer />

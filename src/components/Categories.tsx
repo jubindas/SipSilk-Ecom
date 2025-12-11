@@ -8,37 +8,37 @@ const categoriesData = [
   },
   {
     name: "Laptops",
-    slug: "laptops",
+    slug: "mobiles",
     img: "https://i.pinimg.com/736x/5b/26/e9/5b26e9fc9f2700d2e1e898821f1fcbdc.jpg",
   },
   {
     name: "Fashion",
-    slug: "fashion",
+    slug: "mobiles",
     img: "https://i.pinimg.com/1200x/d3/ef/08/d3ef082cceffe4791ec75a6ef9e449cc.jpg",
   },
   {
     name: "Beauty",
-    slug: "beauty",
+    slug: "mobiles",
     img: "https://i.pinimg.com/736x/3b/62/f4/3b62f4a435f957aa3083081fecf39673.jpg",
   },
   {
     name: "Home & Kitchen",
-    slug: "home-kitchen",
+    slug: "mobiles",
     img: "https://i.pinimg.com/736x/96/85/f5/9685f59454be32e6cceb1f236f0fffcf.jpg",
   },
   {
     name: "Electronics",
-    slug: "electronics",
+    slug: "mobiles",
     img: "https://i.pinimg.com/1200x/e1/22/34/e122343ac7ddb125851689e1fb05cc4a.jpg",
   },
   {
     name: "Sports",
-    slug: "sports",
+    slug: "mobiles",
     img: "https://i.pinimg.com/736x/ff/21/96/ff219690d5723fe50272c4ca2e4ca352.jpg",
   },
   {
     name: "Kids",
-    slug: "kids",
+    slug: "mobiles",
     img: "https://i.pinimg.com/736x/f8/29/ef/f829efb8940140c34a116091a7f74b6e.jpg",
   },
 ];

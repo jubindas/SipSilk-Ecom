@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Heart } from "lucide-react";
+import products from "@/components/productsData";
 
 export default function SubCategories() {
   const [selectedDepartment, setSelectedDepartment] = useState("All");
-  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedRating, setSelectedRating] = useState("All");
+  const [wishlist, setWishlist] = useState<number[]>([]);
 
   const departments = [
     "Amazon Devices & Accessories",
@@ -16,46 +20,40 @@ export default function SubCategories() {
 
   const brands = ["iQOO", "OnePlus", "Samsung", "Vivo", "Apple"];
 
-  const products = [
-    {
-      id: 1,
-      title: "iQOO 15 (Legend, 12GB RAM, 256GB Storage)",
-      price: "₹72,999",
-      mrp: "₹76,999",
-      img: "https://m.media-amazon.com/images/I/71+DWmbvjBL._SY741_.jpg",
-      offer: "5% off",
-    },
-    {
-      id: 2,
-      title: "OnePlus Nord 5",
-      price: "₹31,998",
-      mrp: "₹34,999",
-      img: "https://m.media-amazon.com/images/I/71x2QJjvTRL._SL1500_.jpg",
-      offer: "9% off",
-    },
-    {
-      id: 3,
-      title: "Samsung Galaxy Z Fold 6",
-      price: "₹1,09,,999",
-      mrp: "₹1,64,,999",
-      img: "https://m.media-amazon.com/images/I/71f6lZbrt9L._SX679_.jpg",
-      offer: "33% off",
-    },
-  ];
-
-  const toggleBrand = (brand) => {
+  const toggleBrand = (brand: string) => {
     setSelectedBrands((prev) =>
       prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]
     );
   };
 
+  const toggleWishlist = (id: number) => {
+    setWishlist((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
+  const filteredProducts = products.filter((p) => {
+    if (selectedDepartment !== "All" && p.department !== selectedDepartment)
+      return false;
+    if (selectedBrands.length > 0 && !selectedBrands.includes(p.brand))
+      return false;
+    if (selectedRating !== "All" && p.rating < Number(selectedRating))
+      return false;
+    return true;
+  });
+
+  const greenHover =
+    "hover:bg-green-50 hover:text-green-700 transition-colors duration-200";
+
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-6 flex gap-8">
-      {/* ---------------- LEFT SIDEBAR ---------------- */}
-      <aside className="w-64 shrink-0 bg-white border border-gray-200 rounded-lg p-5 h-fit sticky top-24">
-        {/* Department */}
+      {/* SIDEBAR */}
+      <aside className="w-64 shrink-0 bg-white border border-green-200 rounded-lg p-5 h-fit sticky top-6 shadow-sm">
+        {/* Departments */}
         <section className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Department</h2>
+          <h2 className="text-lg font-semibold mb-2 text-green-900">
+            Department
+          </h2>
 
           <label className="flex items-center gap-2 mb-1">
             <input
@@ -84,7 +82,7 @@ export default function SubCategories() {
 
         {/* Brands */}
         <section className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Brands</h2>
+          <h2 className="text-lg font-semibold mb-2 text-green-900">Brands</h2>
 
           {brands.map((brand) => (
             <label key={brand} className="flex items-center gap-2 mb-1">
@@ -100,8 +98,11 @@ export default function SubCategories() {
 
         <hr className="my-4" />
 
+        {/* Rating */}
         <section className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Customer Reviews</h2>
+          <h2 className="text-lg font-semibold mb-2 text-green-900">
+            Customer Reviews
+          </h2>
 
           <label className="flex items-center gap-2 mb-1">
             <input
@@ -125,46 +126,83 @@ export default function SubCategories() {
         </section>
       </aside>
 
+      {/* PRODUCT GRID */}
       <main className="flex-1">
-        <h1 className="text-xl font-semibold mb-4">
-          Showing Products for:{" "}
-          <span className="text-blue-600">{selectedDepartment}</span>
+        <h1 className="text-xl font-semibold mb-4 text-green-900">
+          Showing Products for:
+          <span className="text-green-700 font-bold">
+            {" "}
+            {selectedDepartment}
+          </span>
         </h1>
 
-        <div className="grid grid-cols-4 gap-5">
-          {products.map((p) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((p) => (
             <div
               key={p.id}
-              className="bg-white border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-lg transition"
+              className="relative bg-white border border-green-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
             >
-              <img
-                src={p.img}
-                alt={p.title}
-                className="w-full h-48 object-contain mb-3"
-              />
-
-              <span className="inline-block bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded">
-                {p.offer}
-              </span>
-
-              <p className="font-semibold mt-2 text-lg">{p.price}</p>
-              <p className="text-sm text-gray-500 line-through">
-                M.R.P: {p.mrp}
-              </p>
-
-              <p className="mt-2 text-sm text-gray-700">{p.title}</p>
-
-              <button className="w-10 h-10 rounded-full bg-yellow-400 mt-3 flex items-center justify-center text-xl font-bold">
-                +
+              {/* Wishlist Button */}
+              <button
+                onClick={() => toggleWishlist(p.id)}
+                className="absolute top-3 right-3 p-2 rounded-full bg-white shadow hover:bg-green-50"
+              >
+                <Heart
+                  className={`w-5 h-5 ${
+                    wishlist.includes(p.id)
+                      ? "text-red-500 fill-red-500"
+                      : "text-green-700"
+                  }`}
+                />
               </button>
+
+              <Link to={`/product/${p.id}`} state={{ fromList: true }}>
+                <img
+                  src={p.img}
+                  alt={p.title}
+                  className="w-full h-44 object-contain mb-3"
+                />
+
+                {/* Offer badge */}
+                <span className="inline-block bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">
+                  {p.offer}
+                </span>
+
+                <p className="font-semibold mt-2 text-lg text-green-900">
+                  {p.priceDisplay}
+                </p>
+
+                <p className="text-sm text-gray-500 line-through">
+                  M.R.P: {p.mrp}
+                </p>
+
+                <p className="mt-2 text-sm text-gray-700">{p.title}</p>
+              </Link>
+
+              {/* Add button + Details */}
+              <div className="flex items-center gap-3 mt-4">
+                <button
+                  title="Add"
+                  className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center text-xl font-bold hover:bg-green-700 transition"
+                >
+                  +
+                </button>
+
+                <Link
+                  to={`/product/${p.id}`}
+                  className="ml-auto text-sm bg-green-600 text-white px-4 py-2 rounded-md font-medium hover:bg-green-700 transition-all duration-200"
+                >
+                  View Details
+                </Link>
+              </div>
             </div>
           ))}
         </div>
+
+        {filteredProducts.length === 0 && (
+          <p className="text-gray-500 mt-5">No products match the filters.</p>
+        )}
       </main>
     </div>
   );
 }
-
-
-
-

@@ -29,6 +29,13 @@ import HomePage from "./layouts/HomePage";
 import CategoryPage from "./layouts/CategoryPage";
 import WishListPage from "./layouts/WishListPage";
 import CartPage from "./layouts/CartPage";
+import SubCategories from "./components/SubCategories";
+import ProductDetails from "./pages/ProductDetails";
+import PrivacyPolicy from "./layouts/PrivacyPolicy";
+import AboutUs from "./layouts/AboutUs";
+import RefundPolicy from "./layouts/RefundPolicy";
+import ShippingPolicy from "./layouts/ShippingPolicy";
+import TermsAndCondition from "./layouts/TermsAndCondition";
 
 const router = createBrowserRouter([
   {
@@ -98,6 +105,35 @@ const router = createBrowserRouter([
       {
         path: "cart",
         element: <CartPage />,
+      },
+      {
+        path: "product/:id",
+        element: <ProductDetails />,
+      },
+
+      {
+        path: "categories/mobiles",
+        element: <SubCategories />,
+      },
+      {
+        path: "privacy-policy",
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: "about-us",
+        element: <AboutUs />,
+      },
+      {
+        path: "refund",
+        element: <RefundPolicy />,
+      },
+      {
+        path: "terms-conditions",
+        element: <TermsAndCondition />,
+      },
+      {
+        path: "shipping",
+        element: <ShippingPolicy />,
       },
     ],
   },
