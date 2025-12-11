@@ -9,11 +9,7 @@ const banners = [
   },
   {
     id: 2,
-    img: "https://i.pinimg.com/736x/43/4a/e1/434ae1c2ad54c503ae45425f0598acb5.jpg",
-  },
-  {
-    id: 3,
-    img: "https://i.pinimg.com/736x/42/d1/a5/42d1a5bfbe20682a1b76dc47262d7f96.jpg",
+    img: "./sipsilk-banner-2.jpg",
   },
 ];
 
@@ -29,7 +25,7 @@ export default function HomeCarousel() {
 
   return (
     <>
-      <div className="relative w-full overflow-hidden rounded-2xl shadow-lg">
+      <div className="relative w-full overflow-hidden rounded-2xl shadow-[#1e1e1e66] shadow-xl ">
         <div
           className="flex transition-transform duration-700"
           style={{ transform: `translateX(-${index * 100}%)` }}

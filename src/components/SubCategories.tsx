@@ -1,12 +1,19 @@
 import { useState } from "react";
+
 import { Link } from "react-router-dom";
+
 import { Heart } from "lucide-react";
+
 import products from "@/components/productsData";
 
 export default function SubCategories() {
+
   const [selectedDepartment, setSelectedDepartment] = useState("All");
+  
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  
   const [selectedRating, setSelectedRating] = useState("All");
+  
   const [wishlist, setWishlist] = useState<number[]>([]);
 
   const departments = [
@@ -42,14 +49,11 @@ export default function SubCategories() {
     return true;
   });
 
-  const greenHover =
-    "hover:bg-green-50 hover:text-green-700 transition-colors duration-200";
-
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-6 flex gap-8">
-      {/* SIDEBAR */}
+
       <aside className="w-64 shrink-0 bg-white border border-green-200 rounded-lg p-5 h-fit sticky top-6 shadow-sm">
-        {/* Departments */}
+     
         <section className="mb-6">
           <h2 className="text-lg font-semibold mb-2 text-green-900">
             Department
@@ -80,7 +84,7 @@ export default function SubCategories() {
 
         <hr className="my-4" />
 
-        {/* Brands */}
+        
         <section className="mb-6">
           <h2 className="text-lg font-semibold mb-2 text-green-900">Brands</h2>
 
@@ -98,7 +102,6 @@ export default function SubCategories() {
 
         <hr className="my-4" />
 
-        {/* Rating */}
         <section className="mb-6">
           <h2 className="text-lg font-semibold mb-2 text-green-900">
             Customer Reviews
@@ -126,7 +129,6 @@ export default function SubCategories() {
         </section>
       </aside>
 
-      {/* PRODUCT GRID */}
       <main className="flex-1">
         <h1 className="text-xl font-semibold mb-4 text-green-900">
           Showing Products for:
@@ -142,7 +144,6 @@ export default function SubCategories() {
               key={p.id}
               className="relative bg-white border border-green-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
             >
-              {/* Wishlist Button */}
               <button
                 onClick={() => toggleWishlist(p.id)}
                 className="absolute top-3 right-3 p-2 rounded-full bg-white shadow hover:bg-green-50"
@@ -163,7 +164,6 @@ export default function SubCategories() {
                   className="w-full h-44 object-contain mb-3"
                 />
 
-                {/* Offer badge */}
                 <span className="inline-block bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">
                   {p.offer}
                 </span>
@@ -179,7 +179,6 @@ export default function SubCategories() {
                 <p className="mt-2 text-sm text-gray-700">{p.title}</p>
               </Link>
 
-              {/* Add button + Details */}
               <div className="flex items-center gap-3 mt-4">
                 <button
                   title="Add"
