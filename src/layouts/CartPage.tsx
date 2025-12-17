@@ -1,5 +1,7 @@
 import { useCartStore } from "@/store/useCartStore";
+
 import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -17,18 +19,27 @@ import {
 import { Building2 } from "lucide-react";
 
 export default function CartPage() {
+
   const { items, updateQty, removeItem, clearCart } = useCartStore();
+
   const navigate = useNavigate();
 
   const [coupon, setCoupon] = useState("");
+
   const [couponApplied, setCouponApplied] = useState(false);
+  
   const [couponDiscount, setCouponDiscount] = useState(0);
+  
   const [selectedAddress, setSelectedAddress] = useState("Home");
+  
   const [paymentMethod, setPaymentMethod] = useState("COD");
+  
   const [adressSHow, setAdressShow] = useState(false);
 
   const subTotal = items.reduce((sum, it) => sum + it.price * it.qty, 0);
+  
   const shippingFee = 23;
+  
   const total = subTotal - couponDiscount + shippingFee;
 
   const addresses = [
@@ -67,9 +78,8 @@ export default function CartPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-12 gap-10 text-[#111827]">
-      {/* LEFT SIDE */}
       <div className="col-span-8 space-y-6">
-        {/* PINCODE */}
+
         <div className="bg-green-50 border border-green-200 rounded-xl p-5">
           <div className="flex items-center gap-3">
             <MapPin className="w-6 h-6 text-green-700" />
@@ -84,7 +94,6 @@ export default function CartPage() {
           </button>
         </div>
 
-        {/* OFFERS */}
         <div className="bg-green-50 border border-green-200 rounded-xl p-5">
           <div className="flex items-center gap-3">
             <Tag className="w-6 h-6 text-green-600" />
@@ -98,7 +107,7 @@ export default function CartPage() {
           </p>
         </div>
 
-        {/* REMOVE ALL */}
+
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-green-900">
             ✓ {items.length}/{items.length} ITEMS SELECTED
@@ -112,7 +121,6 @@ export default function CartPage() {
           </button>
         </div>
 
-        {/* EMPTY CART */}
         {items.length === 0 ? (
           <div className="p-10 bg-white border rounded-xl text-center">
             <p>Your cart is empty.</p>
@@ -146,7 +154,7 @@ export default function CartPage() {
                 </h3>
                 <p className="text-sm text-gray-600">Sold by: Demo Supplier</p>
 
-                {/* Qty + Size */}
+
                 <div className="flex gap-8 mt-3">
                   <div>
                     <p className="text-sm font-medium">Size</p>
@@ -178,7 +186,7 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                {/* PRICE */}
+
                 <div className="mt-4">
                   <p className="font-bold text-lg text-green-900">
                     ₹{it.price}
@@ -201,10 +209,10 @@ export default function CartPage() {
         )}
       </div>
 
-      {/* RIGHT SIDE */}
+
       <div className="col-span-4">
         <div className="sticky top-10 space-y-6">
-          {/* COUPON */}
+
           <div className="bg-white border rounded-xl p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <Tag className="w-6 h-6 text-green-700" />
@@ -236,7 +244,7 @@ export default function CartPage() {
             )}
           </div>
 
-          {/* ADDRESS */}
+
           <div
             className="bg-white border rounded-xl p-5 shadow-sm cursor-pointer hover:shadow-md"
             onClick={() => setAdressShow((prev) => !prev)}
@@ -298,7 +306,7 @@ export default function CartPage() {
             </div>
           </div>
 
-          {/* PAYMENT */}
+
           <div className="bg-white border rounded-xl p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-4">
               <CreditCard className="w-6 h-6 text-green-700" />
@@ -308,7 +316,7 @@ export default function CartPage() {
             </div>
 
             <div className="grid gap-4">
-              {/* COD */}
+
               <div
                 onClick={() => setPaymentMethod("COD")}
                 className={`border rounded-xl p-4 flex items-center gap-3 cursor-pointer transition-all
@@ -345,7 +353,7 @@ export default function CartPage() {
                 </div>
               )}
 
-              {/* ONLINE */}
+
               <div
                 onClick={() => setPaymentMethod("ONLINE")}
                 className={`border rounded-xl p-4 flex items-center gap-3 cursor-pointer transition-all

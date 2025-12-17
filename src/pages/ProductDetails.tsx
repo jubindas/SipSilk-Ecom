@@ -1,158 +1,159 @@
 import { useState } from "react";
-
 import { useParams, useNavigate } from "react-router-dom";
-
 import products from "@/components/productsData";
-
 import { useCartStore } from "@/store/useCartStore";
+import { ChevronLeft, Zap, Star, ShieldCheck, RefreshCcw, Truck, MessageSquare } from "lucide-react";
 
 export default function ProductDetails() {
   const { id } = useParams();
-
   const product = products.find((p) => String(p.id) === String(id));
-
   const navigate = useNavigate();
-
   const addToCart = useCartStore((state) => state.addToCart);
 
-  const [mainMedia, setMainMedia] = useState(
-    product ? product.images[0] : null
-  );
+  const reviews = [
+    { id: 1, name: "Rahul Sharma", rating: 5, date: "12 Aug 2025", comment: "Amazing product quality. Totally worth the price." },
+    { id: 2, name: "Ananya Verma", rating: 4, date: "02 Aug 2025", comment: "Product is good overall. Battery life could be better." },
+    { id: 3, name: "Amit Das", rating: 3, date: "28 Jul 2025", comment: "Average experience. Expected better build quality." },
+  ];
 
+  const [mainMedia, setMainMedia] = useState(product ? product.images[0] : null);
   const isVideo = mainMedia === "video";
 
-  if (!product) {
-    return (
-      <div className="max-w-5xl mx-auto p-6">
-        <p>Product not found.</p>
-        <button className="mt-4 text-blue-600" onClick={() => navigate(-1)}>
-          Go back
-        </button>
-      </div>
-    );
-  }
+  if (!product) return <div className="p-10 text-center">Product not found.</div>;
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-12 gap-8">
-      <div className="col-span-2 space-y-4 sticky top-24 self-start">
-        {[...product.images, "video"].map((src, index) => (
-          <button
-            key={index}
-            onClick={() => setMainMedia(src)}
-            className={`w-full p-2 border rounded-xl bg-white hover:shadow-md transition ${
-              mainMedia === src ? "border-blue-500" : "border-gray-200"
-            }`}
-          >
-            {src === "video" ? (
-              <img
-                src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
-                className="w-full h-24 object-cover rounded-md"
-                alt="video-thumb"
-              />
-            ) : (
-              <img
-                src={src}
-                className="w-full h-24 object-contain rounded-md"
-                alt="thumb"
-              />
-            )}
-          </button>
-        ))}
+    <div className="min-h-screen bg-[#fcfdfc] text-slate-700 pb-12">
+      {/* Breadcrumb - Smaller padding */}
+      <div className="max-w-6xl mx-auto px-4 py-3">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-emerald-600 hover:text-emerald-700 text-sm font-medium">
+          <ChevronLeft size={16} /> Back
+        </button>
       </div>
 
-      <div className="col-span-6 flex items-center justify-center">
-        <div className="w-full max-w-[600px] p-5 border rounded-2xl bg-white shadow-sm">
-          {isVideo ? (
-            <iframe
-              width="100%"
-              height="420"
-              className="rounded-lg"
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-              title="YouTube video"
-              allowFullScreen
-            ></iframe>
-          ) : (
-            <img
-              src={mainMedia || ""}
-              className="w-full h-[500px] object-contain rounded-lg hover:scale-105 transition-transform"
-              alt={product.title}
-            />
-          )}
+      <div className="max-w-6xl mx-auto px-4 grid grid-cols-12 gap-6">
+        
+        {/* LEFT: Media - More compact */}
+        <div className="col-span-12 lg:col-span-7 flex flex-col md:flex-row gap-3">
+          <div className="flex md:flex-col gap-2 order-2 md:order-1">
+            {[...product.images, "video"].map((src, index) => (
+              <button
+                key={index}
+                onClick={() => setMainMedia(src)}
+                className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all p-0.5 bg-white ${
+                  mainMedia === src ? "border-emerald-500" : "border-slate-100 hover:border-emerald-200"
+                }`}
+              >
+                <img src={src === "video" ? "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg" : src} className="w-full h-full object-cover rounded-lg" alt="thumb" />
+              </button>
+            ))}
+          </div>
+
+          <div className="flex-1 bg-white rounded-3xl border border-emerald-50 p-4 shadow-sm flex items-center justify-center order-1 md:order-2 h-[400px]">
+            {isVideo ? (
+              <iframe width="100%" height="100%" className="rounded-xl" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="video" />
+            ) : (
+              <img src={mainMedia || ""} className="max-h-full object-contain hover:scale-105 transition-transform" alt={product.title} />
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT: Info - Tighter spacing */}
+        <div className="col-span-12 lg:col-span-5 space-y-4">
+          <div className="bg-white rounded-3xl p-6 border border-emerald-50 shadow-sm">
+            <div className="flex justify-between items-start">
+              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-md text-[10px] font-bold uppercase">
+                {product.stock ? "In Stock" : "Low Stock"}
+              </span>
+              <div className="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <Star size={12} className="fill-emerald-500" /> {product.rating}
+              </div>
+            </div>
+            
+            <h1 className="text-2xl font-bold text-slate-800 mt-2">{product.title}</h1>
+
+            <div className="mt-4">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-black text-slate-900">{product.priceDisplay}</span>
+                <span className="text-sm text-slate-400 line-through">{product.mrp}</span>
+              </div>
+              <p className="text-emerald-600 text-xs font-semibold flex items-center gap-1 mt-1">
+                <Zap size={12} fill="currentColor"/> {product.offer} discount applied
+              </p>
+            </div>
+
+            <p className="text-slate-500 text-sm leading-relaxed mt-4 line-clamp-3">{product.description}</p>
+
+            {/* Compact Badges */}
+            <div className="grid grid-cols-3 gap-2 mt-6">
+              {[
+                { icon: Truck, label: "Free Shipping" },
+                { icon: RefreshCcw, label: "Easy Returns" },
+                { icon: ShieldCheck, label: "Secure" },
+              ].map((item, i) => (
+                <div key={i} className="flex flex-col items-center p-2 rounded-xl bg-slate-50 border border-slate-100">
+                  <item.icon size={14} className="text-emerald-600 mb-1" />
+                  <span className="text-[10px] font-medium text-slate-600">{item.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 mt-6">
+              <button 
+                className="py-3 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition shadow-md shadow-emerald-100"
+                onClick={() => { addToCart(product); alert("Added!"); }}
+              >
+                Add to Cart
+              </button>
+              <button 
+                className="py-3 rounded-xl bg-slate-800 text-white text-sm font-bold hover:bg-black transition"
+                onClick={() => { addToCart(product); navigate("/cart"); }}
+              >
+                Buy Now
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="col-span-4">
-        <div className="sticky top-24 bg-white p-5 rounded-2xl border shadow-sm">
-          <h1 className="text-2xl font-bold leading-snug mb-3">
-            {product.title}
-          </h1>
+      {/* NEW REVIEW DESIGN: Modern Grid Cards */}
+      <div className="max-w-6xl mx-auto px-4 mt-12">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold flex items-center gap-2">
+            <MessageSquare size={20} className="text-emerald-500" /> Customer Feedback
+          </h2>
+          <button className="text-sm font-bold text-emerald-600 hover:underline">Write a Review</button>
+        </div>
 
-          <div className="flex items-center gap-3 text-sm text-gray-600 mb-3">
-            ⭐⭐⭐⭐☆ <span>({product.rating})</span>
-            <span className="text-gray-400">•</span>
-            <span>{product.sold}</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Summary Stat Card */}
+          <div className="bg-emerald-900 text-white p-6 rounded-2xl flex flex-col justify-center items-center">
+            <p className="text-4xl font-black">{product.rating}</p>
+            <div className="flex gap-1 my-1">
+              {[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-emerald-400 text-emerald-400" />)}
+            </div>
+            <p className="text-emerald-200 text-xs mt-1 italic">Total {reviews.length} reviews</p>
           </div>
 
-          <div className="mb-4">
-            <span className="text-4xl font-bold">{product.priceDisplay}</span>
-            <p className="text-sm text-gray-500 line-through">
-              M.R.P: {product.mrp}
-            </p>
-            <p className="text-green-600 font-medium mt-1">
-              Limited time deal — {product.offer}
-            </p>
-          </div>
-
-          <p className="text-gray-700 text-sm leading-relaxed mb-4">
-            {product.description}
-          </p>
-
-          <div className="p-3 bg-gray-50 rounded-lg border mb-4">
-            <p className="text-sm">
-              <strong>Delivery:</strong> Free delivery Saturday.
-            </p>
-            <p className="text-sm text-gray-600">
-              Fastest delivery Tomorrow if ordered within 4 hrs.
-            </p>
-          </div>
-
-          <p
-            className={`font-semibold mb-2 ${
-              product.stock ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {product.stock ? "In stock" : "Out of stock"}
-          </p>
-
-          <p className="text-gray-500 text-sm mb-6">
-            Ships from Amazon • Sold by Demo Seller
-          </p>
-
-          <div className="flex gap-4 mb-4">
-            <button
-              className="flex-1 py-3 rounded-lg bg-yellow-400 font-semibold hover:bg-yellow-500 transition"
-              onClick={() => {
-                addToCart(product);
-                alert("Added to cart!");
-              }}
-            >
-              Add to Cart
-            </button>
-
-            <button
-              className="flex-1 py-3 rounded-lg bg-orange-500 text-white font-semibold hover:bg-orange-600 transition"
-              onClick={() => {
-                addToCart(product);
-                navigate("/cart");
-              }}
-            >
-              Buy Now
-            </button>
-          </div>
-
-          <p className="text-xs text-gray-500">
-            Secure payment • 10-day replacement policy
-          </p>
+          {/* Individual Review Cards */}
+          {reviews.map((review) => (
+            <div key={review.id} className="bg-white border border-slate-100 p-5 rounded-2xl shadow-sm hover:border-emerald-100 transition">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 text-xs font-bold uppercase">
+                    {review.name.charAt(0)}
+                  </div>
+                  <span className="text-sm font-bold">{review.name}</span>
+                </div>
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={10} className={i < review.rating ? "fill-emerald-500 text-emerald-500" : "text-slate-100"} />
+                  ))}
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed italic">"{review.comment}"</p>
+              <p className="text-[10px] text-slate-300 mt-3 font-medium uppercase tracking-wider">{review.date}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

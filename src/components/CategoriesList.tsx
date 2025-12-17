@@ -6,44 +6,38 @@ import { Link } from "react-router";
 export default function CategoriesList() {
   const categories = [
     {
-      name: "Mobiles & Tablets",
-      img: "https://i.pinimg.com/736x/5a/c0/d5/5ac0d522480fabc0b612e2e303c17b53.jpg",
+      name: "Blue Tea",
+      img: "products/blue-tea-2.jpg",
     },
     {
-      name: "Fashion",
-      img: "https://i.pinimg.com/736x/ce/ef/4f/ceef4f217da7abdc09629104213085cf.jpg",
+      name: "Green Tea",
+      img: "products/blue-tea-2.jpg",
       arrow: true,
       dropdown: ["Men's Wear", "Women's Wear", "Kids Fashion"],
     },
     {
-      name: "Electronics",
-      img: "https://i.pinimg.com/1200x/eb/d8/4a/ebd84aee9bd1feddce359d9803236f4b.jpg",
+      name: "Green Hurble Tea",
+      img: "products/green-tea-50g.jpg",
       arrow: true,
       dropdown: ["Laptops", "Mobiles", "Headphones"],
     },
     {
-      name: "Home & Furniture",
-      img: "https://i.pinimg.com/1200x/18/27/f4/1827f4f4b7db10aa379281338cf730c5.jpg",
+      name: "Rose Tea",
+      img: "products/rose-tea-1.jpg",
       arrow: true,
       dropdown: ["Furniture", "Decor", "Lighting"],
     },
     {
-      name: "Appliances",
-      img: "https://i.pinimg.com/1200x/eb/d8/4a/ebd84aee9bd1feddce359d9803236f4b.jpg",
+      name: "Smoke Tea",
+      img: "smoke-tea.jpg",
       arrow: true,
       dropdown: ["Refrigerators", "Washing Machines", "Air Conditioners"],
     },
     {
-      name: "Beauty & Personal Care",
-      img: "https://i.pinimg.com/736x/27/6e/f3/276ef331f2dfa51b1cb35ebaed5cb42d.jpg",
+      name: "Turmeric Tea",
+      img: "products/turmeric-tea.jpeg",
       arrow: true,
       dropdown: ["Makeup", "Skincare", "Hair Care"],
-    },
-    {
-      name: "Sports & Fitness",
-      img: "https://i.pinimg.com/736x/ac/34/d1/ac34d1e734d3ce5490f836a2836f4fbd.jpg",
-      arrow: true,
-      dropdown: ["Gym Equipment", "Sportswear", "Outdoor Sports"],
     },
   ];
 

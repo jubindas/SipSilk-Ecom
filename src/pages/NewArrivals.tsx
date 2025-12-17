@@ -1,7 +1,6 @@
 import { ShoppingCart, Heart } from "lucide-react";
 
-
-export default function PopularItems() {
+export default function NewArrivals() {
   const products = [
     {
       id: 1,
@@ -46,14 +45,11 @@ export default function PopularItems() {
   ];
 
   return (
-    <section className="py-20 bg-linear-to-b from-[#ffffff] via-[#f3faef] to-[#d6f7c5]">
+    <section className="py-20 bg-[#ffffff]">
       <div className="container mx-auto px-12">
-        <div className="flex flex-col items-center mb-16">
-          <span className="text-green-600 font-semibold tracking-widest text-sm uppercase mb-2">
-            Our Collection
-          </span>
+        <div className="flex flex-col items-center mb-10">
           <h2 className="text-4xl md:text-5xl font-serif text-slate-900 text-center">
-            Popular Items
+            New Arrivals
           </h2>
           <div className="h-1 w-20 bg-green-600 mt-4 rounded-full"></div>
         </div>
@@ -62,36 +58,31 @@ export default function PopularItems() {
           {products.map((p) => (
             <div
               key={p.id}
-              className="group bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden"
+              className="group bg-white rounded-4xl border border-green-100/50 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden"
             >
-              <div className="relative aspect-square overflow-hidden">
+              <div className="relative aspect-square overflow-hidden bg-gray-50">
                 <img
                   src={p.image}
                   alt={p.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
 
-                <button className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-full text-slate-400 hover:text-red-500 hover:bg-white transition-all shadow-sm">
-                  <Heart
-                    size={18}
-                    fill="currentColor"
-                    className="fill-transparent hover:fill-red-500"
-                  />
+                <button className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-full text-slate-400 hover:text-red-500 transition-all shadow-sm z-10">
+                  <Heart size={18} />
                 </button>
 
-                {p.discount > 0 && (
-                  <div className="absolute top-4 left-0 bg-green-600 text-white text-[11px] font-bold px-3 py-1 rounded-r-full shadow-lg">
-                    SAVE {p.discount}%
-                  </div>
-                )}
+                <div className="absolute top-4 left-4 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg z-10 tracking-widest uppercase">
+                  New
+                </div>
 
-                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-linear-to-t from-black/50 to-transparent">
-                  <button className="w-full bg-white py-2.5 cursor-pointer rounded-xl text-slate-900 font-bold text-sm flex items-center justify-center gap-2 hover:bg-green-600 hover:text-white transition-colors">
+                <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-linear-to-t from-black/40 to-transparent">
+                  <button className="w-full bg-white py-3 cursor-pointer rounded-2xl text-slate-900 font-bold text-sm flex items-center justify-center gap-2 hover:bg-green-600 hover:text-white transition-all shadow-xl">
                     <ShoppingCart size={16} />
-                    Quick Add
+                    Add to Cart
                   </button>
                 </div>
               </div>
+
               <div className="p-6 flex flex-col justify-between h-full">
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -126,6 +117,12 @@ export default function PopularItems() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-16 flex justify-center">
+          <button className="px-10 py-4 mb-5 bg-green-700 text-white cursor-pointer font-bold rounded-full hover:bg-green-800 hover:shadow-xl transition-all tracking-wide">
+            Explore All New Arrivals
+          </button>
         </div>
       </div>
     </section>

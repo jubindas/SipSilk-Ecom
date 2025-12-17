@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
+
 import { useAuthStore } from "@/store/useAuthStore";
 
 import {
@@ -15,7 +17,6 @@ import {
   User,
   Heart,
   LogOut,
-  Zap,
   Box,
   Bell,
 } from "lucide-react";
@@ -24,24 +25,42 @@ import { Link, useNavigate } from "react-router";
 
 export default function Navbar() {
   const user = useAuthStore((s) => s.user);
+
   const logout = useAuthStore((s) => s.logout);
+
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
+
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
-  const popularItems = [
-    { name: "Smartphones", slug: "smartphones" },
-    { name: "Laptops", slug: "laptops" },
-    { name: "Clothing", slug: "clothing" },
-    { name: "Shoes", slug: "shoes" },
-    { name: "Headphones", slug: "headphones" },
-  ];
+  const handleSearch = (value: any) => {
+    setSearch(value);
+
+    if (value.trim() === "") {
+      setSearchResults([]);
+      return;
+    }
+
+    const products = [
+      { id: 1, name: "Organic Green Tea" },
+      { id: 2, name: "Assam Black Tea" },
+      { id: 3, name: "Silk Scarf" },
+    ];
+
+    const filtered = products.filter((p) =>
+      p.name.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setSearchResults(filtered);
+  };
 
   const hoverGreen =
     "hover:bg-linear-to-r hover:from-green-50 hover:to-green-100 hover:text-green-700";
@@ -80,41 +99,21 @@ export default function Navbar() {
             placeholder="Search for Products, Brands and More"
             className="ml-3 bg-transparent outline-none w-full text-gray-700 placeholder:text-gray-400"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
-            onBlur={() => setIsSearchFocused(false)}
+            onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
           />
         </div>
 
+        {isSearchFocused && searchResults.length > 0 && (
+          <div className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-2 z-50">
+            {searchResults.map((item: any) => (
+              <div>{item.name}</div>
+            ))}
+          </div>
+        )}
+
         <div className="flex items-center gap-4 text-gray-700 font-medium shrink-0">
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger
-                  className={`px-4 py-2 text-gray-700 font-medium text-sm rounded-lg transition-all duration-200 flex items-center gap-2 ${hoverGreen}`}
-                >
-                  <Zap className="w-4 h-4" />
-                  Popular
-                </NavigationMenuTrigger>
-
-                <NavigationMenuContent asChild>
-                  <ul className="p-3 bg-white shadow-xl rounded-xl w-56 border border-gray-100 animate-in fade-in-0 zoom-in-95 duration-200">
-                    {popularItems.map((item) => (
-                      <li key={item.slug}>
-                        <Link
-                          to={`/category/${item.slug}`}
-                          className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 font-medium text-gray-700 ${hoverGreen}`}
-                        >
-                          {item.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-
           <Link
             to="/categories"
             className={`px-4 py-2 text-gray-700 font-medium text-sm rounded-lg transition-all duration-200 ${hoverGreen}`}
@@ -134,10 +133,10 @@ export default function Navbar() {
             {!user ? (
               <Link
                 to="/login"
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 group ${hoverGreen}`}
+                className={`flex items-center gap-2 px-4 py-2 bg-linear-to-r from-green-50 to-green-100 text-green-700 rounded-lg transition-all duration-200 group ${hoverGreen}`}
               >
                 <User className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
-                <span>Account</span>
+                <span>Login</span>
               </Link>
             ) : (
               <NavigationMenu>
