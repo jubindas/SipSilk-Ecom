@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const blogs = [
   {
@@ -38,28 +38,45 @@ export default function Blogs() {
   return (
     <section className="py-20 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-12">
+        <div className="text-center mb-14">
           <h2 className="text-4xl font-serif text-slate-900">Our Blog</h2>
           <div className="w-20 h-1 bg-green-600 mx-auto mt-4 rounded-full" />
         </div>
 
-        <div className="relative">
-          <div className="flex gap-8 animate-blog-scroll hover:paused">
+        <div>
+          <div
+            className="
+              flex gap-8 w-max
+              animate-blog-scroll
+              hover:paused
+              transform-gpu will-change-transform
+            "
+          >
             {[...blogs, ...blogs].map((blog, index) => (
               <div
                 key={index}
-                className="min-w-[320px] max-w-[320px] bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group"
+                className="
+                  min-w-[320px] max-w-[320px]
+                  bg-white rounded-3xl overflow-hidden
+                  shadow-md hover:shadow-xl
+                  transition-shadow duration-300
+                  group
+                "
               >
                 <div className="h-48 overflow-hidden">
                   <img
                     src={blog.image}
                     alt={blog.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="
+                      w-full h-full object-cover
+                      transition-transform duration-500
+                      group-hover:scale-110
+                    "
                   />
                 </div>
 
                 <div className="p-5">
-                  <h3 className="text-lg font-semibold text-slate-800 mb-2 group-hover:text-green-700 transition-colors">
+                  <h3 className="text-lg font-semibold text-slate-800 mb-2 transition-colors group-hover:text-green-700">
                     {blog.title}
                   </h3>
 
@@ -67,7 +84,7 @@ export default function Blogs() {
                     {blog.excerpt}
                   </p>
 
-                  <button className="text-green-700 text-sm font-semibold cursor-pointer">
+                  <button className="text-green-700 text-sm font-semibold">
                     Read More →
                   </button>
                 </div>
@@ -76,12 +93,17 @@ export default function Blogs() {
           </div>
         </div>
 
-        <div className="flex justify-center mt-12">
+        <div className="flex justify-center mt-14">
           <Link
             to="/blogs"
-            className="group inline-flex px-8 py-3 rounded-full bg-green-600 text-white font-semibold text-sm
-             items-center gap-2 hover:bg-green-700 transition-all shadow-md
-             hover:-translate-y-0.5"
+            className="
+              group inline-flex items-center gap-2
+              px-8 py-3 rounded-full
+              bg-green-600 text-white
+              font-semibold text-sm
+              shadow-md transition-all
+              hover:bg-green-700 hover:-translate-y-0.5
+            "
           >
             Check Out More Blogs
             <ArrowRight
@@ -94,16 +116,16 @@ export default function Blogs() {
 
       <style>{`
         @keyframes blog-scroll {
-          0% {
+          from {
             transform: translateX(0);
           }
-          100% {
+          to {
             transform: translateX(-50%);
           }
         }
+
         .animate-blog-scroll {
-          width: max-content;
-          animation: blog-scroll 35s linear infinite;
+          animation: blog-scroll 40s linear infinite;
         }
       `}</style>
     </section>

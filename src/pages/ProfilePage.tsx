@@ -1,21 +1,19 @@
-import { useAuthStore } from "@/store/useAuthStore";
-import { useState } from "react";
 import { Camera, Mail, User as UserIcon, Phone, Save } from "lucide-react";
+import { useState } from "react";
+
+const user = {
+  profilePic: "https://www.com",
+  name: "jubin",
+  email: "jubin@email.com",
+};
 
 export default function ProfilePage() {
-  const user = useAuthStore((s) => s.user);
-  const updateProfile = useAuthStore((s) => s.updateProfile);
+  const [name, setName] = useState<string>();
 
-  const [name, setName] = useState(user?.name || "");
-  const [phone, setPhone] = useState(user?.phone || "");
-
-  const save = () => {
-    updateProfile({ name, phone });
-    alert("Profile updated successfully!");
-  };
+  const [phone, setPhone] = useState<string>();
 
   return (
-    <div className="flex-1 p-8 bg-[#e2e2e2] max-h-[600px]">
+    <div className="flex-1 p-8 bg-[#ffffff] max-h-[600px] rounded-lg">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-emerald-950">
@@ -62,9 +60,9 @@ export default function ProfilePage() {
                   Full Name
                 </label>
                 <div className="relative">
-                  <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-400" />
+                  <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
-                    className="w-full pl-11 pr-4 py-3 bg-emerald-50/30 border border-emerald-100 rounded-2xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all placeholder:text-emerald-300"
+                    className="w-full pl-11 pr-4 py-3 bg-gray-50/30 border border-emerald-100 rounded-2xl focus:ring-2 focus:ring-gray-500/20 focus:border-gray-500 outline-none transition-all placeholder:text-gray-300"
                     placeholder="John Doe"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -90,7 +88,7 @@ export default function ProfilePage() {
 
             <div className="mt-12 flex justify-end">
               <button
-                onClick={save}
+                onClick={() => {}}
                 className="flex items-center gap-2 bg-emerald-600 text-white px-8 py-3.5 rounded-2xl font-semibold shadow-lg shadow-emerald-200 hover:bg-emerald-700 hover:shadow-emerald-300/50 transition-all active:scale-95"
               >
                 <Save className="w-4 h-4" />

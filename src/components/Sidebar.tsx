@@ -12,7 +12,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-72 bg-emerald-50/30 border border-emerald-100 rounded-2xl p-6 flex flex-col gap-8 h-screen max-h-[600px] sticky top-5">
+    <aside className="w-72 bg-emerald-50/30 border border-emerald-100 rounded-2xl p-6 flex flex-col gap-8 h-screen max-h-[600px] sticky top-5 ml-20">
       <div>
         <h2 className="text-emerald-900 text-sm font-bold uppercase tracking-wider px-4">
           Settings
