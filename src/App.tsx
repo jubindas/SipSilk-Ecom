@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClientProvider } from "@tanstack/react-query";
 
 import { queryClient } from "@/config/query-client-config";
+import Disclaimer from "./layouts/Disclaimer";
 
 const GlobalLoading = lazy(() => import("./components/GlobalLoading"));
 
@@ -159,6 +160,10 @@ const router = createBrowserRouter([
       {
         path: "blogs",
         element: <AllBlogs />,
+      },
+       {
+        path: "disclaimer",
+        element: <Disclaimer />,
       },
     ],
   },

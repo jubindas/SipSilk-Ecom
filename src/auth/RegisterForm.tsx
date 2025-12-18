@@ -1,26 +1,28 @@
 import { useState } from "react";
-
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
-
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  ArrowLeft,
+  Sparkles,
+  UserPlus,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function RegisterPage() {
-  
   const navigate = useNavigate();
-
   const login = useAuthStore((s) => s.login);
 
   const [showPassword, setShowPassword] = useState(false);
-
   const [name, setName] = useState("");
-
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
 
-  const handleRegister = () => {
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
     const user = {
       name,
       email,
@@ -33,78 +35,110 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 font-sans">
-      <div className="hidden md:flex items-center justify-center bg-linear-to-br from-emerald-400 to-teal-500 relative overflow-hidden mr-50">
-        <div className="absolute w-96 h-96 bg-white/10 rounded-full -top-20 -left-20" />
-        <div className="absolute w-72 h-72 bg-white/10 rounded-full bottom-10 right-10" />
+    <div className="min-h-screen flex font-sans bg-white">
+      <div className="hidden lg:flex w-[40%] bg-linear-to-br from-emerald-500 via-emerald-600 to-teal-700 relative overflow-hidden items-center justify-center p-12">
+        <div className="absolute top-[-10%] left-[-10%] w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-[-5%] right-[-5%] w-64 h-64 bg-emerald-400/20 rounded-full blur-2xl" />
 
-        <div className="text-center text-white max-w-sm z-10">
-          <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
-          <p className="text-sm mb-6 opacity-90">
-            Already have an account? Sign in and continue your journey.
+        <div className="relative z-10 text-center text-white">
+          <div className="inline-flex p-3 bg-white/10 backdrop-blur-xl rounded-2xl mb-6 border border-white/20">
+            <Sparkles className="w-8 h-8 text-emerald-100" />
+          </div>
+          <h2 className="text-4xl font-bold mb-4">Welcome Back!</h2>
+          <p className="text-emerald-50/80 mb-10 leading-relaxed font-medium max-w-xs mx-auto">
+            To keep connected with us please login with your personal info.
           </p>
 
           <button
             onClick={() => navigate("/login")}
-            className="px-10 h-11 rounded-full bg-white text-emerald-600 font-semibold hover:bg-gray-100 cursor-pointer transition"
+            className="group px-10 h-13 rounded-2xl bg-white text-emerald-700 font-bold hover:bg-emerald-50 transition-all shadow-xl flex items-center gap-2 mx-auto"
           >
-            Log In
+            <ArrowLeft
+              size={18}
+              className="cursor-pointer group-hover:-translate-x-1 transition-transform"
+            />
+            Sign In
           </button>
         </div>
       </div>
 
-      <div className="flex items-center justify-center bg-white px-6 mr-50">
-        <div className="w-full max-w-md text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Create Account
-          </h1>
-          <p className="text-sm text-gray-500 mb-8">Sign up to get started</p>
-
-          <div className="relative mb-4">
-            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              placeholder="Full name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full h-12 pl-11 pr-4 rounded-full bg-gray-100 outline-none focus:ring-2 focus:ring-emerald-400"
-            />
+      <div className="flex-1 flex items-center justify-center px-8 lg:px-16">
+        <div className="w-full max-w-md">
+          <div className="mb-10 text-center lg:text-left">
+            <h1 className="text-4xl font-extrabold text-emerald-950 tracking-tight mb-2">
+              Create Account
+            </h1>
+            <p className="text-black font-medium">
+              Join us today and start managing your profile professionally.
+            </p>
           </div>
 
-          <div className="relative mb-4">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full h-12 pl-11 pr-4 rounded-full bg-gray-100 outline-none focus:ring-2 focus:ring-emerald-400"
-            />
-          </div>
+          <form onSubmit={handleRegister} className="space-y-5">
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-emerald-900 ml-1">
+                Full Name
+              </label>
+              <div className="relative group">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black group-focus-within:text-gray-600 transition-colors" />
+                <input
+                  placeholder="John Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full h-13 pl-12 pr-5 rounded-2xl bg-gray-100/30 border border-emerald-100 outline-none focus:ring-4 focus:ring-gray-500/10 focus:border-gray-500 transition-all placeholder:text-gray-600"
+                  required
+                />
+              </div>
+            </div>
 
-          <div className="relative mb-6">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full h-12 pl-11 pr-12 rounded-full bg-gray-100 outline-none focus:ring-2 focus:ring-emerald-400"
-            />
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-emerald-900 ml-1">
+                Email Address
+              </label>
+              <div className="relative group">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black group-focus-within:text-gray-600 transition-colors" />
+                <input
+                  type="email"
+                  placeholder="Example@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full h-13 pl-12 pr-5 rounded-2xl bg-gray-100/30 border border-emerald-100 outline-none focus:ring-4 focus:ring-gray-500/10 focus:border-gray-500 transition-all placeholder:text-gray-600"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-emerald-900 ml-1">
+                Password
+              </label>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black group-focus-within:text-gray-600 transition-colors" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full h-13 pl-12 pr-5 rounded-2xl bg-gray-100/30 border border-emerald-100 outline-none focus:ring-4 focus:ring-gray-500/10 focus:border-gray-500 transition-all placeholder:text-gray-600"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-300 hover:text-emerald-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
+
             <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+              type="submit"
+              className="w-full h-13 mt-6 rounded-2xl cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-200 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
             >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              <UserPlus size={18} />
+              Create Account
             </button>
-          </div>
-
-          <button
-            onClick={handleRegister}
-            className="w-full h-12 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium transition mb-4 cursor-pointer"
-          >
-            Create Account
-          </button>
+          </form>
         </div>
       </div>
     </div>

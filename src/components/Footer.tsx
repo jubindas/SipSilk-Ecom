@@ -66,6 +66,11 @@ export default function Footer() {
                 Shipping Policy
               </Link>
             </li>
+            <li>
+              <Link to="/disclaimer" className="hover:text-white">
+                Disclaimer
+              </Link>
+            </li>
           </ul>
         </div>
 
