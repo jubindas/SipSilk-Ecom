@@ -8,13 +8,15 @@ import ScrollToTop from "./ScrollToTop";
 
 export default function RootLayout() {
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <ScrollToTop />
       <Header />
-      <main className="min-h-[80vh] container mx-auto">
+
+      <main className="flex-1 container mx-auto">
         <Outlet />
       </main>
+
       <Footer />
-    </>
+    </div>
   );
 }

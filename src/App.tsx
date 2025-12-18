@@ -1,71 +1,89 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import { lazy, Suspense } from "react";
+
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 
 import { queryClient } from "@/config/query-client-config";
 
-import RootLayout from "./components/RootLayout";
+const RootLayout = lazy(() => import("./components/RootLayout"));
 
-import LoginForm from "./auth/login";
+const LoginForm = lazy(() => import("./auth/login"));
 
-import GlobalError from "./components/GlobalError";
+const GlobalError = lazy(() => import("./components/GlobalError"));
 
-import RegisterForm from "@/auth/RegisterForm";
+const RegisterForm = lazy(() => import("@/auth/RegisterForm"));
 
-import ProfilePage from "@/pages/ProfilePage";
+const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 
-import AddressPage from "@/pages/AddressPage";
+const AddressPage = lazy(() => import("@/pages/AddressPage"));
 
-import BankPage from "@/pages/BankPage";
+const BankPage = lazy(() => import("@/pages/BankPage"));
 
-import ProtectedRoute from "@/routes/protected-route";
+const ProtectedRoute = lazy(() => import("@/routes/protected-route"));
 
-import AccountLayout from "./components/AccountLayout";
+const AccountLayout = lazy(() => import("./components/AccountLayout"));
 
-import HomePage from "./layouts/HomePage";
+const HomePage = lazy(() => import("./layouts/HomePage"));
 
-import CategoryPage from "./layouts/CategoryPage";
+const CategoryPage = lazy(() => import("./layouts/CategoryPage"));
 
-import WishListPage from "./layouts/WishListPage";
+const WishListPage = lazy(() => import("./layouts/WishListPage"));
 
-import CartPage from "./layouts/CartPage";
+const CartPage = lazy(() => import("./layouts/CartPage"));
 
-import SubCategories from "./components/SubCategories";
+const SubCategories = lazy(() => import("./components/SubCategories"));
 
-import ProductDetails from "./pages/ProductDetails";
+const ProductDetails = lazy(() => import("./pages/ProductDetails"));
 
-import PrivacyPolicy from "./layouts/PrivacyPolicy";
+const PrivacyPolicy = lazy(() => import("./layouts/PrivacyPolicy"));
 
-import AboutUs from "./layouts/AboutUs";
+const AboutUs = lazy(() => import("./layouts/AboutUs"));
 
-import RefundPolicy from "./layouts/RefundPolicy";
+const RefundPolicy = lazy(() => import("./layouts/RefundPolicy"));
 
-import ShippingPolicy from "./layouts/ShippingPolicy";
+const ShippingPolicy = lazy(() => import("./layouts/ShippingPolicy"));
 
-import TermsAndCondition from "./layouts/TermsAndCondition";
+const TermsAndCondition = lazy(() => import("./layouts/TermsAndCondition"));
 
-import ContactUs from "./layouts/ContactUs";
+const ContactUs = lazy(() => import("./layouts/ContactUs"));
 
-import AllBlogs from "./layouts/AllBlogs";
+const AllBlogs = lazy(() => import("./layouts/AllBlogs"));
 
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: <LoginForm />,
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <LoginForm />
+      </Suspense>
+    ),
   },
   {
     path: "/register",
-    element: <RegisterForm />,
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <RegisterForm />
+      </Suspense>
+    ),
   },
   {
     path: "/",
-    element: <RootLayout />,
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <RootLayout />
+      </Suspense>
+    ),
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: (
+          <Suspense fallback={<div>loading</div>}>
+            <HomePage />
+          </Suspense>
+        ),
       },
       {
         element: <AccountLayout />,
@@ -169,7 +187,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-      <RouterProvider router={router} />
+      <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
+        <RouterProvider router={router} />
+      </Suspense>
     </QueryClientProvider>
   );
 }

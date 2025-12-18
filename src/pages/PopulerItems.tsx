@@ -1,5 +1,4 @@
-import { ShoppingCart, Heart } from "lucide-react";
-
+import { ShoppingCart, Heart, SearchIcon } from "lucide-react";
 
 export default function PopularItems() {
   const products = [
@@ -84,11 +83,15 @@ export default function PopularItems() {
                     SAVE {p.discount}%
                   </div>
                 )}
-
-                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-linear-to-t from-black/50 to-transparent">
-                  <button className="w-full bg-white py-2.5 cursor-pointer rounded-xl text-slate-900 font-bold text-sm flex items-center justify-center gap-2 hover:bg-green-600 hover:text-white transition-colors">
+                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-linear-to-t from-black/50 to-transparent flex gap-3">
+                  <button className="w-1/2 bg-white py-2.5 cursor-pointer rounded-xl text-slate-900 font-bold text-sm flex items-center justify-center gap-2 hover:bg-green-600 hover:text-white transition-colors">
                     <ShoppingCart size={16} />
                     Quick Add
+                  </button>
+
+                  <button className="w-1/2 bg-white py-2.5 cursor-pointer rounded-xl text-slate-900 font-bold text-sm flex items-center justify-center gap-2 hover:bg-green-600 hover:text-white transition-colors">
+                    <SearchIcon size={16} />
+                    View Details
                   </button>
                 </div>
               </div>

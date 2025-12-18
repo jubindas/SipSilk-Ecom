@@ -37,9 +37,8 @@ const blogs = [
 
 export default function AllBlogs() {
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-green-50">
+    <section className="py-20 bg-linear-to-b from-white to-green-50">
       <div className="max-w-7xl mx-auto px-6">
-    
         <div className="text-center mb-14">
           <h1 className="text-4xl md:text-5xl font-serif text-slate-900">
             Our Blogs

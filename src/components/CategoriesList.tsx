@@ -67,7 +67,7 @@ function CategoryItem({ cat }: any) {
         className="w-14 h-14 object-contain transition-transform duration-200 group-hover:scale-105"
       />
 
-      <div className="flex items-center gap-1 mt-1 text-sm font-medium text-gray-700 group-hover:text-blue-600">
+      <div className="flex items-center gap-1 mt-1 text-sm font-medium text-gray-700  hover:text-green-700">
         {cat.name}
         {cat.arrow && <span className="text-lg">▾</span>}
       </div>
@@ -79,7 +79,7 @@ function CategoryItem({ cat }: any) {
               <li key={index}>
                 <Link
                   to={`/category/${item.toLowerCase().replace(/ /g, "-")}`}
-                  className="block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 text-gray-700 font-medium"
+                  className="block px-4 py-2 rounded-lg  hover:bg-linear-to-r hover:from-green-50 hover:to-green-100 hover:text-green-700 transition-all duration-200 text-gray-700 font-medium"
                 >
                   {item}
                 </Link>
