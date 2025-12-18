@@ -8,6 +8,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 
 import { queryClient } from "@/config/query-client-config";
 
+const GlobalLoading = lazy(() => import("./components/GlobalLoading"));
+
 const RootLayout = lazy(() => import("./components/RootLayout"));
 
 const LoginForm = lazy(() => import("./auth/login"));
@@ -55,35 +57,19 @@ const AllBlogs = lazy(() => import("./layouts/AllBlogs"));
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: (
-      <Suspense fallback={<div>Loading...</div>}>
-        <LoginForm />
-      </Suspense>
-    ),
+    element: <LoginForm />,
   },
   {
     path: "/register",
-    element: (
-      <Suspense fallback={<div>Loading...</div>}>
-        <RegisterForm />
-      </Suspense>
-    ),
+    element: <RegisterForm />,
   },
   {
     path: "/",
-    element: (
-      <Suspense fallback={<div>Loading...</div>}>
-        <RootLayout />
-      </Suspense>
-    ),
+    element: <RootLayout />,
     children: [
       {
         index: true,
-        element: (
-          <Suspense fallback={<div>loading</div>}>
-            <HomePage />
-          </Suspense>
-        ),
+        element: <HomePage />,
       },
       {
         element: <AccountLayout />,
@@ -187,7 +173,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-      <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
+      <Suspense fallback={<GlobalLoading />}>
         <RouterProvider router={router} />
       </Suspense>
     </QueryClientProvider>

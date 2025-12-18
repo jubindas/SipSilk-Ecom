@@ -5,7 +5,7 @@ export default function BestSeller() {
     {
       id: 1,
       title: "Handmade Brass Paraat",
-      subtitle: "Hammered Finish & Pure Brass",
+      desc: "Hammered Finish & Pure Brass",
       image: "blue-tea.jpg",
       price: 2849,
       oldPrice: 3400,
@@ -15,7 +15,7 @@ export default function BestSeller() {
     {
       id: 2,
       title: "Brass Chapati Box",
-      subtitle: "Secure Lid, Anti-Bacterial",
+      desc: "Secure Lid, Anti-Bacterial",
       image: "green-tea.jpg",
       price: 3499,
       oldPrice: 3600,
@@ -25,7 +25,7 @@ export default function BestSeller() {
     {
       id: 3,
       title: "Copper Lagaan",
-      subtitle: "Tin coated with Lid",
+      desc: "Tin coated with Lid",
       image: "rose-tea.jpg",
       price: 5499,
       oldPrice: 6300,
@@ -35,7 +35,7 @@ export default function BestSeller() {
     {
       id: 4,
       title: "Pure Brass Water Pot",
-      subtitle: "Traditional Handmade",
+      desc: "Traditional Handmade",
       image: "smoke-tea.jpg",
       price: 4299,
       oldPrice: 4800,
@@ -95,36 +95,33 @@ export default function BestSeller() {
                   </div>
                 </div>
 
-                <div className="p-6 flex flex-col justify-between h-full">
+                <div className="p-6 flex flex-col justify-between h-full bg-white rounded-lg">
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-semibold text-green-700 uppercase tracking-widest">
-                        {p.subtitle?.split(",")[0] || "Handcrafted"}
-                      </span>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-xs font-semibold text-green-700 uppercase tracking-widest ">
+                        {p.title}
+                      </h3>
+                      <div className="flex text-yellow-400 text-xs">★★★★★</div>
+                    </div>
 
-                      <div className="flex text-yellow-400 text-[11px]">
-                        ★★★★★
+                    <span className="text-lg font-semibold text-slate-800 leading-snug mb-3 group-hover:text-green-700 transition-colors line-clamp-2">
+                      {p.desc?.split(",")[0] || "Handcrafted"}
+                    </span>
+                    <div className="h-px bg-gray-200 mb-4"></div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl font-extrabold text-slate-900">
+                          ₹{p.price.toLocaleString("en-IN")}
+                        </span>
+                        <span className="text-base text-gray-400 line-through">
+                          ₹{p.oldPrice.toLocaleString("en-IN")}
+                        </span>
                       </div>
+                      <p className="text-xs text-gray-500 text-right">
+                        {p.reviews} verified reviews
+                      </p>
                     </div>
-
-                    <h3 className="text-[17px] font-semibold text-slate-800 leading-snug mb-3 group-hover:text-green-700 transition-colors line-clamp-2">
-                      {p.title}
-                    </h3>
-
-                    <div className="h-px bg-gray-200/70 mb-4"></div>
-
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl font-extrabold text-slate-900">
-                        ₹{p.price.toLocaleString("en-IN")}
-                      </span>
-                      <span className="text-sm text-gray-400 line-through">
-                        ₹{p.oldPrice.toLocaleString("en-IN")}
-                      </span>
-                    </div>
-
-                    <p className="text-[11px] text-gray-400 mt-1">
-                      {p.reviews} verified reviews
-                    </p>
                   </div>
                 </div>
               </div>

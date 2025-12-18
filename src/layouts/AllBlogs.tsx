@@ -31,7 +31,7 @@ const blogs = [
     title: "Eco-Friendly Kitchen: A Sustainable Choice",
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
     excerpt:
-      "Switching to metal cookware helps reduce plastic use and supports sustainable living.",
+      "Switching to metal cookware helps reduce plastic use and supports sustainable living.Switching to metal cookware helps reduce plastic use and supports sustainable living.Switching to metal cookware helps reduce plastic use and supports sustainable living.",
   },
 ];
 
@@ -70,18 +70,18 @@ export default function AllBlogs() {
                     {blog.title}
                   </h3>
 
-                  <p className="text-sm text-gray-600 leading-relaxed mb-6">
+                  <p className="text-sm text-gray-600 leading-relaxed mb-6 line-clamp-3">
                     {blog.excerpt}
                   </p>
-                </div>
 
-                <Link
-                  to={`/blogs/${blog.id}`}
-                  className="inline-flex items-center gap-2 text-green-700 font-semibold text-sm hover:gap-3 transition-all"
-                >
-                  Read Full Article
-                  <ArrowRight size={16} />
-                </Link>
+                  <Link
+                    to={`/blogs/${blog.id}`}
+                    className="inline-flex items-center gap-2 text-green-700 font-semibold text-sm hover:gap-3 transition-all"
+                  >
+                    Read Full Article
+                    <ArrowRight size={16} />
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
