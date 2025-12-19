@@ -1,6 +1,8 @@
 import { ShoppingCart, Heart, SearchIcon } from "lucide-react";
 
 export default function NewArrivals() {
+
+  
   const products = [
     {
       id: 1,
@@ -67,8 +69,12 @@ export default function NewArrivals() {
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
 
-                <button className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-full text-slate-400 hover:text-red-500 transition-all shadow-sm z-10">
-                  <Heart size={18} />
+                 <button className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-full text-slate-400 hover:text-red-500 hover:bg-white transition-all shadow-sm">
+                  <Heart
+                    size={18}
+                    fill="currentColor"
+                    className="fill-transparent hover:fill-red-500"
+                  />
                 </button>
 
                 <div className="absolute top-4 left-4 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg z-10 tracking-widest uppercase">
