@@ -1,4 +1,5 @@
 import { Camera, Mail, User as UserIcon, Phone, Save } from "lucide-react";
+
 import { useState } from "react";
 
 const user = {

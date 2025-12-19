@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 import { useLocation } from "react-router-dom";
 
 export default function ScrollToTop() {
@@ -6,7 +7,7 @@ export default function ScrollToTop() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [pathname]); // trigger when route changes
+  }, [pathname]);
 
-  return null; // this component doesn't render anything
+  return null;
 }

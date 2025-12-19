@@ -2,7 +2,6 @@ export default function TermsAndCondition() {
   return (
     <div className="min-h-screen bg-white py-16 px-6">
       <div className="max-w-4xl mx-auto">
-        {/* Title */}
         <h1 className="text-4xl font-bold text-gray-900 mb-6">
           Terms & Conditions
         </h1>
@@ -12,7 +11,6 @@ export default function TermsAndCondition() {
           or purchasing from our platform, you agree to these conditions.
         </p>
 
-        {/* Use of Website */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Use of Website
         </h2>
@@ -24,7 +22,6 @@ export default function TermsAndCondition() {
           </li>
         </ul>
 
-        {/* Product Information */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Product Information
         </h2>
@@ -48,7 +45,6 @@ export default function TermsAndCondition() {
           defects.
         </p>
 
-        {/* Pricing & Payment */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Pricing & Payment
         </h2>
@@ -59,7 +55,6 @@ export default function TermsAndCondition() {
           <li>COD availability depends on serviceable PIN codes.</li>
         </ul>
 
-        {/* Shipping & Delivery */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Shipping & Delivery
         </h2>
@@ -79,7 +74,6 @@ export default function TermsAndCondition() {
           details.
         </p>
 
-        {/* Cancellations, Returns, Refunds */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Cancellations, Returns & Refunds
         </h2>
@@ -88,7 +82,6 @@ export default function TermsAndCondition() {
           <span className="font-semibold"> Refund & Return Policy</span>.
         </p>
 
-        {/* Intellectual Property */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Intellectual Property
         </h2>
@@ -98,7 +91,6 @@ export default function TermsAndCondition() {
           written permission.
         </p>
 
-        {/* Limitation of Liability */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Limitation of Liability
         </h2>
@@ -114,7 +106,6 @@ export default function TermsAndCondition() {
           </li>
         </ul>
 
-        {/* Governing Law */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Governing Law
         </h2>

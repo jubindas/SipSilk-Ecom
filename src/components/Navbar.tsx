@@ -24,6 +24,7 @@ import {
 import { Link, useNavigate } from "react-router";
 
 export default function Navbar() {
+  
   const user = useAuthStore((s) => s.user);
 
   const logout = useAuthStore((s) => s.logout);
@@ -115,7 +116,7 @@ export default function Navbar() {
 
         <div className="flex items-center gap-4 text-gray-700 font-medium shrink-0">
           <Link
-            to="/categories"
+            to="categories"
             className={`px-4 py-2 text-gray-700 font-medium text-sm rounded-lg transition-all duration-200 ${hoverGreen}`}
           >
             All Categories

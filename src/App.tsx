@@ -7,8 +7,10 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClientProvider } from "@tanstack/react-query";
 
 import { queryClient } from "@/config/query-client-config";
-import Disclaimer from "./layouts/Disclaimer";
-import Orders from "./layouts/Orders";
+
+const Disclaimer = lazy(() => import("./layouts/Disclaimer"));
+
+const Orders = lazy(() => import("./layouts/Orders"));
 
 const GlobalLoading = lazy(() => import("./components/GlobalLoading"));
 

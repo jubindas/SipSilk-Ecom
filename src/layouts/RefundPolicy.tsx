@@ -3,24 +3,21 @@ export default function RefundPolicy() {
     <div className="min-h-screen bg-white py-16 px-6">
       <div className="max-w-4xl mx-auto">
 
-        {/* Title */}
+        
         <h1 className="text-4xl font-bold text-gray-900 mb-6">
           Return & Cancellation Policy
         </h1>
 
-        {/* Intro */}
         <p className="text-gray-700 leading-relaxed mb-6">
           Thank you for shopping with us. We aim to provide you with the best quality products
           and a smooth shopping experience. Please read our Return & Refund Policy carefully
           before making a purchase.
         </p>
 
-        {/* No Return Notice */}
         <p className="text-gray-800 font-medium mb-8">
           <span className="font-semibold">Note:</span> sipsilk.com does not accept returns once the order is delivered.
         </p>
 
-        {/* Order Cancellation */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Order Cancellation
         </h2>
@@ -36,7 +33,7 @@ export default function RefundPolicy() {
           <span className="font-semibold"> 4–5 working days</span>.
         </p>
 
-        {/* Refund Policy */}
+      
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Refund Policy
         </h2>
@@ -52,7 +49,7 @@ export default function RefundPolicy() {
           Sipsilk.com reserves the right to approve or reject refund requests at its sole discretion.
         </p>
 
-        {/* Replacement Policy */}
+        
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Replacement Policy
         </h2>
@@ -61,7 +58,6 @@ export default function RefundPolicy() {
           <li>Photos or videos of the issue may be required for verification.</li>
         </ul>
 
-        {/* Contact */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Contact Us
         </h2>

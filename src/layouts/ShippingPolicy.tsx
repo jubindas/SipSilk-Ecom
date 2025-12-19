@@ -2,7 +2,6 @@ export default function ShippingPolicy() {
   return (
     <div className="min-h-screen bg-white py-16 px-6">
       <div className="max-w-4xl mx-auto">
-        {/* Title */}
         <h1 className="text-4xl font-bold text-gray-900 mb-6">
           Shipping Policy
         </h1>
@@ -13,7 +12,6 @@ export default function ShippingPolicy() {
           process, ship, and deliver your products.
         </p>
 
-        {/* Shipping Partner */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Shipping Partner
         </h2>
@@ -25,7 +23,6 @@ export default function ShippingPolicy() {
           delivery location and service availability.
         </p>
 
-        {/* Order Processing */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Order Processing Time
         </h2>
@@ -48,7 +45,6 @@ export default function ShippingPolicy() {
           </li>
         </ul>
 
-        {/* Delivery Timeline */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Shipping Time & Delivery
         </h2>
@@ -64,7 +60,6 @@ export default function ShippingPolicy() {
           </li>
         </ul>
 
-        {/* Shipping Charges */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Shipping Charges
         </h2>
@@ -79,7 +74,6 @@ export default function ShippingPolicy() {
           </li>
         </ul>
 
-        {/* Order Tracking */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Order Tracking
         </h2>
@@ -94,7 +88,6 @@ export default function ShippingPolicy() {
           </li>
         </ul>
 
-        {/* COD */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Cash on Delivery (COD)
         </h2>
@@ -107,7 +100,6 @@ export default function ShippingPolicy() {
           </li>
         </ul>
 
-        {/* RTO / Non-delivery */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Non-Delivery, Reattempts & RTO
         </h2>
@@ -130,7 +122,6 @@ export default function ShippingPolicy() {
           </li>
         </ul>
 
-        {/* Packaging */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Packaging & Dispatch
         </h2>
@@ -144,7 +135,6 @@ export default function ShippingPolicy() {
           </li>
         </ul>
 
-        {/* International Shipping */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           International Shipping (If Applicable)
         </h2>
@@ -158,7 +148,6 @@ export default function ShippingPolicy() {
           </li>
         </ul>
 
-        {/* Delays */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Delivery Delays
         </h2>
@@ -168,7 +157,6 @@ export default function ShippingPolicy() {
           will assist you in tracking and coordinating with Shiprocket support.
         </p>
 
-        {/* Policy Updates */}
         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Changes to Shipping Policy
         </h2>
