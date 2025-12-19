@@ -1,18 +1,16 @@
 import { create } from "zustand";
 
 export interface User {
-  name: string;
+  id: string;
+  fullName: string;
   email: string;
-  phone?: string;
-  addresses?: string[];
-
-  bankDetails?: string[];
+  isAdmin: boolean;
+  isUserVerified: boolean;
 }
 
 export interface AuthState {
   user: User | null;
   token: string | null;
-
   login: (userData: User, accessToken: string) => void;
   logout: () => void;
 }

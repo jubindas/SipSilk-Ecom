@@ -1,74 +1,181 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAuthStore } from "@/store/useAuthStore";
-
 import { useState } from "react";
 
-import { Banknote, Trash2 } from "lucide-react";
+import {
+  Banknote,
+  Plus,
+  X,
+  Building2,
+  User,
+  Hash,
+  Landmark,
+} from "lucide-react";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
+
+import { getProfile } from "@/services/users";
+
+import { addBankDetails } from "@/services/bankDetails";
+
+import GlobalLoading from "@/components/GlobalLoading";
+
+import GlobalError from "@/components/GlobalError";
+
+import SuccessToast from "@/components/SuccessToast";
+
+import GreenInput from "@/components/GreenInput";
+
+interface BankDetails {
+  accountHolderName: string;
+  accountNumber: string;
+  ifsc: string;
+  bankName: string;
+  branchName: string;
+}
 
 export default function BankPage() {
-  const user = useAuthStore((s) => s.user);
-  // const addBankDetail = useAuthStore((s) => s.addBankDetail);
-  // const deleteBankDetail = useAuthStore((s) => s.deleteBankDetail);
+  const [showForm, setShowForm] = useState(false);
 
-  const [form, setForm] = useState<any>({
-    bankName: "",
-    accountNumber: "",
-    ifsc: "",
-    holderName: "",
+  const [bank, setBank] = useState("");
+
+  const [accNo, setAccNo] = useState("");
+
+  const [ifsc, setIfsc] = useState("");
+
+  const [accHolderName, setaccHolderName] = useState("");
+
+  const [branchName, setBranchName] = useState("");
+
+  const {
+    data: userProfile,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["user"],
+    queryFn: getProfile,
   });
 
-  // const handleAdd = () => {
-  //   const id = crypto.randomUUID();
-  //   addBankDetail({ id, ...form });
-  //   setForm({ bankName: "", accountNumber: "", ifsc: "", holderName: "" });
-  // };
+  const { mutate, isPending, isSuccess } = useMutation({
+    mutationFn: (data: BankDetails & { userId: string }) =>
+      addBankDetails(data),
+  });
+
+  const userBank = userProfile?.data?.bankDetails;
+
+  console.log("the bank details are", userBank);
+
+  if (isLoading) return <GlobalLoading />;
+  if (isError) return <GlobalError />;
+
+  const handleSave = () => {
+    if (!bank || !accNo || !ifsc || !accHolderName) return;
+
+    mutate({
+      bankName: bank,
+      accountNumber: accNo,
+      ifsc,
+      accountHolderName: accHolderName,
+      branchName,
+      userId: userProfile.data.id,
+    });
+
+    setShowForm(false);
+  };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold flex items-center gap-2">
-        <Banknote className="w-5 h-5" /> Bank Details
-      </h2>
+    <div className="max-w-3xl space-y-8">
+      {isSuccess && <SuccessToast message={null} />}
 
-      <div className="grid grid-cols-2 gap-4 border rounded-md p-4 bg-gray-50">
-        {Object.keys(form).map((key) => (
-          <div key={key}>
-            <label className="capitalize">{key}</label>
-            <input
-              className="w-full p-2 border rounded mt-1"
-              value={form[key]}
-              onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-            />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-green-100 text-green-700">
+            <Banknote />
           </div>
-        ))}
+          <h2 className="text-xl font-semibold text-green-900">Bank Details</h2>
+        </div>
 
         <button
-          onClick={() => {}}
-          className="col-span-2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          onClick={() => setShowForm((p) => !p)}
+          className="flex items-center gap-2 px-4 py-2 text-sm rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
         >
-          Add Bank Detail
+          {showForm ? <X size={16} /> : <Plus size={16} />}
+          {showForm ? "Close" : "Add Bank"}
         </button>
       </div>
 
-      <ul className="space-y-4">
-        {user?.bankDetails?.length ? (
-          user.bankDetails.map((b: any) => (
-            <li key={b.id} className="border p-4 rounded flex justify-between">
-              <div>
-                <h1>hi</h1>
-              </div>
+      <div className="space-y-4">
+        <div className="flex justify-between items-center p-5 rounded-xl bg-white border shadow-sm">
+          <div className="space-y-1">
+            <p className="font-semibold text-green-900 flex items-center gap-2">
+              <Landmark size={16} />
+              {userBank.accountHolderName}
+            </p>
+            <p className="text-sm text-gray-600">
+              **** {userBank.accountNumber.slice(-4)}
+            </p>
+            <p className="text-xs text-gray-500">IFSC: {userBank.ifsc}</p>
+          </div>
 
-              <button
-                onClick={() => {}}
-                className="text-red-600 flex items-center gap-1"
-              >
-                <Trash2 className="w-4 h-4" /> Remove
-              </button>
-            </li>
-          ))
-        ) : (
-          <p>No bank details saved yet.</p>
-        )}
-      </ul>
+          <button className="flex items-center gap-1 text-sm text-red-600 hover:text-red-700">
+            Remove
+          </button>
+        </div>
+      </div>
+
+      {showForm && (
+        <div className="p-6 rounded-xl border bg-green-50 space-y-5">
+          <h3 className="text-lg font-semibold text-green-900">
+            Add Bank Account
+          </h3>
+
+          <GreenInput
+            label="Bank Name"
+            value={bank}
+            onChange={setBank}
+            icon={<Building2 size={16} />}
+            placeholder="HDFC Bank"
+          />
+
+          <GreenInput
+            label="Account Number"
+            value={accNo}
+            onChange={setAccNo}
+            icon={<Hash size={16} />}
+            placeholder="XXXXXXXXXX"
+          />
+
+          <GreenInput
+            label="Account Holder Name"
+            value={accHolderName}
+            onChange={setaccHolderName}
+            icon={<User size={16} />}
+            placeholder="Full Name"
+          />
+
+          <GreenInput
+            label="IFSC Code"
+            value={ifsc}
+            onChange={setIfsc}
+            icon={<Landmark size={16} />}
+            placeholder="HDFC0001234"
+          />
+
+          <GreenInput
+            label="Branch Name"
+            value={branchName}
+            onChange={setBranchName}
+            icon={<Building2 size={16} />}
+            placeholder="Main Branch"
+          />
+
+          <button
+            disabled={isPending}
+            onClick={handleSave}
+            className="w-full py-2.5 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 transition disabled:opacity-60"
+          >
+            {isPending ? "Saving..." : "Save Bank Details"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

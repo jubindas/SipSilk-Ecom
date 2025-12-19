@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import {
   Eye,
   EyeOff,
@@ -8,21 +9,52 @@ import {
   Sparkles,
   UserPlus,
 } from "lucide-react";
+
 import { useNavigate } from "react-router-dom";
+
 import { useAuthStore } from "@/store/useAuthStore";
+
+import { useMutation } from "@tanstack/react-query";
+
+import { loginUser } from "@/services/users";
+
+interface LoginUser {
+  email: string;
+  password: string;
+}
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
 
   const login = useAuthStore((s) => s.login);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: LoginUser) => loginUser(data),
+    onSuccess: (data) => {
+      console.log("the created data is", data.user);
+      login(data.user, data.token);
+      navigate("/");
+    },
+    onError: (err) => {
+      console.log("the error is", err);
+    },
+  });
+
   const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    login({ name: "Jubin", email }, "sample-token");
-    navigate("/");
+
+    const LoginPayload = {
+      email,
+      password,
+    };
+
+    mutate(LoginPayload);
   };
 
   return (
@@ -47,7 +79,7 @@ export default function LoginPage() {
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black group-focus-within:text-gray-600 transition-colors" />
                 <input
                   type="email"
-                  placeholder="Example@company.com"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full h-13 pl-12 pr-5 rounded-2xl bg-gray-100/30 border border-emerald-100 outline-none focus:ring-4 focus:ring-gray-500/10 focus:border-gray-500 transition-all placeholder:text-gray-600"
@@ -64,7 +96,7 @@ export default function LoginPage() {
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black group-focus-within:text-gray-600 transition-colors" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full h-13 pl-12 pr-5 rounded-2xl bg-gray-100/30 border border-emerald-100 outline-none focus:ring-4 focus:ring-gray-500/10 focus:border-gray-500 transition-all placeholder:text-gray-600"
@@ -83,9 +115,10 @@ export default function LoginPage() {
             <button
               type="submit"
               className="w-full h-13 mt-4 cursor-pointer rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-200 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+              disabled={isPending}
             >
               <UserPlus size={18} />
-              Sign In
+              {isPending ? "Loging In.." : "Log In"}
             </button>
           </form>
         </div>

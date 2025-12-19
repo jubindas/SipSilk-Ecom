@@ -1,3 +1,7 @@
+import GlobalError from "@/components/GlobalError";
+import GlobalLoading from "@/components/GlobalLoading";
+import { getProfile } from "@/services/users";
+import { useQuery } from "@tanstack/react-query";
 import { Camera, Mail, User as UserIcon, Phone, Save } from "lucide-react";
 
 import { useState } from "react";
@@ -12,6 +16,21 @@ export default function ProfilePage() {
   const [name, setName] = useState<string>();
 
   const [phone, setPhone] = useState<string>();
+
+  const {
+    data: userProfile,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["user"],
+    queryFn: getProfile,
+  });
+
+  console.log("the user profile is", userProfile);
+
+  if (isLoading) <GlobalLoading />;
+
+  if (isError) <GlobalError />;
 
   return (
     <div className="flex-1 p-8 bg-[#ffffff] max-h-[600px] rounded-lg">
@@ -33,12 +52,13 @@ export default function ProfilePage() {
               <div className="relative group">
                 <img
                   src={
-                    user?.profilePic ||
-                    "https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
+                    userProfile?.photo ||
+                    "https://i.pinimg.com/736x/6a/67/bf/6a67bfa9d6a4e6c85e9c98616198f6c2.jpg"
                   }
                   alt="Profile"
                   className="w-32 h-32 rounded-3xl border-4 border-white shadow-xl object-cover"
                 />
+
                 <button className="absolute -bottom-2 -right-2 bg-emerald-600 p-2.5 rounded-xl shadow-lg hover:bg-emerald-700 transition-transform hover:scale-110">
                   <Camera className="w-5 h-5 text-white" />
                 </button>
@@ -46,7 +66,7 @@ export default function ProfilePage() {
 
               <div className="mb-2">
                 <h3 className="text-xl font-bold text-emerald-900">
-                  {name || "User Name"}
+                  {user.name || "User Name"}
                 </h3>
                 <div className="flex items-center gap-2 text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full mt-1 text-sm border border-emerald-100 w-fit">
                   <Mail className="w-3.5 h-3.5" />

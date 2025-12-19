@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import {
   Eye,
   EyeOff,
@@ -9,29 +10,54 @@ import {
   Sparkles,
   UserPlus,
 } from "lucide-react";
+
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/useAuthStore";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { registration } from "@/services/users";
+
+interface User {
+  password: string;
+  fullName: string;
+  email: string;
+}
 
 export default function RegisterPage() {
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
-  const login = useAuthStore((s) => s.login);
 
   const [showPassword, setShowPassword] = useState(false);
+
   const [name, setName] = useState("");
+
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: User) => registration(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
+      navigate("/login");
+    },
+    onError: (error) => {
+      console.log("the error is", error);
+    },
+  });
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     const user = {
-      name,
+      fullName: name,
       email,
-      addresses: [],
-      bankDetails: [],
+      password,
     };
 
-    login(user, "fake-generated-token");
-    navigate("/profile");
+    mutate(user);
   };
 
   return (
@@ -81,7 +107,7 @@ export default function RegisterPage() {
               <div className="relative group">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black group-focus-within:text-gray-600 transition-colors" />
                 <input
-                  placeholder="John Doe"
+                  placeholder="Enter your name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full h-13 pl-12 pr-5 rounded-2xl bg-gray-100/30 border border-emerald-100 outline-none focus:ring-4 focus:ring-gray-500/10 focus:border-gray-500 transition-all placeholder:text-gray-600"
@@ -98,7 +124,7 @@ export default function RegisterPage() {
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black group-focus-within:text-gray-600 transition-colors" />
                 <input
                   type="email"
-                  placeholder="Example@company.com"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full h-13 pl-12 pr-5 rounded-2xl bg-gray-100/30 border border-emerald-100 outline-none focus:ring-4 focus:ring-gray-500/10 focus:border-gray-500 transition-all placeholder:text-gray-600"
@@ -115,7 +141,7 @@ export default function RegisterPage() {
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black group-focus-within:text-gray-600 transition-colors" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full h-13 pl-12 pr-5 rounded-2xl bg-gray-100/30 border border-emerald-100 outline-none focus:ring-4 focus:ring-gray-500/10 focus:border-gray-500 transition-all placeholder:text-gray-600"
@@ -134,9 +160,10 @@ export default function RegisterPage() {
             <button
               type="submit"
               className="w-full h-13 mt-6 rounded-2xl cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-200 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+              disabled={isPending}
             >
               <UserPlus size={18} />
-              Create Account
+              {isPending ? "Createing Account...." : "Create Account"}
             </button>
           </form>
         </div>

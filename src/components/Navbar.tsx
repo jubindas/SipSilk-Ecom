@@ -24,7 +24,6 @@ import {
 import { Link, useNavigate } from "react-router";
 
 export default function Navbar() {
-  
   const user = useAuthStore((s) => s.user);
 
   const logout = useAuthStore((s) => s.logout);
@@ -148,7 +147,7 @@ export default function Navbar() {
                     >
                       <User className="w-5 h-5" />
                       <span className="max-w-[100px] truncate">
-                        {user.name}
+                        {user.fullName}
                       </span>
                     </NavigationMenuTrigger>
 
