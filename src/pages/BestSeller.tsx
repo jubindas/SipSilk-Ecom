@@ -111,7 +111,7 @@ export default function BestSeller() {
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl font-extrabold text-slate-900">
+                        <span className="text-2xl text-slate-900">
                           ₹{p.price.toLocaleString("en-IN")}
                         </span>
                         <span className="text-base text-gray-400 line-through">

@@ -88,7 +88,7 @@ export default function NewArrivals() {
                 </div>
               </div>
 
-             <div className="p-6 flex flex-col justify-between h-full bg-white rounded-lg">
+              <div className="p-6 flex flex-col justify-between h-full bg-white rounded-lg">
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-xs font-semibold text-green-700 uppercase tracking-widest ">
@@ -104,7 +104,7 @@ export default function NewArrivals() {
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <span className="text-2xl font-extrabold text-slate-900">
+                      <span className="text-2xl  text-slate-900">
                         ₹{p.price.toLocaleString("en-IN")}
                       </span>
                       <span className="text-base text-gray-400 line-through">

@@ -84,7 +84,7 @@ export default function Blogs() {
                     {blog.excerpt}
                   </p>
 
-                  <button className="text-green-700 text-sm font-semibold">
+                  <button className="text-green-700 text-sm font-semibold cursor-pointer">
                     Read More →
                   </button>
                 </div>
@@ -103,6 +103,7 @@ export default function Blogs() {
               font-semibold text-sm
               shadow-md transition-all
               hover:bg-green-700 hover:-translate-y-0.5
+              cursor-pointer
             "
           >
             Check Out More Blogs

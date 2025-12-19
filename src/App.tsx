@@ -8,6 +8,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 
 import { queryClient } from "@/config/query-client-config";
 import Disclaimer from "./layouts/Disclaimer";
+import Orders from "./layouts/Orders";
 
 const GlobalLoading = lazy(() => import("./components/GlobalLoading"));
 
@@ -78,6 +79,14 @@ const router = createBrowserRouter([
           { path: "profile", element: <ProfilePage /> },
           { path: "profile/addresses", element: <AddressPage /> },
           { path: "profile/bank-details", element: <BankPage /> },
+          {
+            path: "profile/wish-list",
+            element: <WishListPage />,
+          },
+          {
+            path: "profile/orders",
+            element: <Orders />,
+          },
         ],
       },
       {
@@ -116,10 +125,7 @@ const router = createBrowserRouter([
         path: "categories",
         element: <CategoryPage />,
       },
-      {
-        path: "wish-list",
-        element: <WishListPage />,
-      },
+
       {
         path: "cart",
         element: <CartPage />,
@@ -161,7 +167,7 @@ const router = createBrowserRouter([
         path: "blogs",
         element: <AllBlogs />,
       },
-       {
+      {
         path: "disclaimer",
         element: <Disclaimer />,
       },
