@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 
 import {
@@ -18,47 +19,54 @@ import { useMutation } from "@tanstack/react-query";
 
 import { loginUser } from "@/services/users";
 
+import toast, { Toaster } from "react-hot-toast";
+
 interface LoginUser {
   email: string;
   password: string;
 }
 
 export default function LoginPage() {
+
   const [showPassword, setShowPassword] = useState(false);
-
-  const [email, setEmail] = useState("");
-
-  const [password, setPassword] = useState("");
+  
+  const [email, setEmail] = useState("jubin@gmail.com");
+  
+  const [password, setPassword] = useState("password");
+  
+  const navigate = useNavigate();
 
   const login = useAuthStore((s) => s.login);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (data: LoginUser) => loginUser(data),
     onSuccess: (data) => {
-      console.log("the created data is", data.user);
+      toast.success(`Welcome back, ${data.user.name || "User"}!`);
+
       login(data.user, data.token);
-      navigate("/");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     },
-    onError: (err) => {
+    onError: (err: any) => {
+      const errorMessage =
+        err?.response?.data?.message ||
+        "Login failed. Please check your credentials.";
+      toast.error(errorMessage);
       console.log("the error is", err);
     },
   });
 
-  const navigate = useNavigate();
-
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const LoginPayload = {
-      email,
-      password,
-    };
-
-    mutate(LoginPayload);
+    mutate({ email, password });
   };
 
   return (
     <div className="min-h-screen flex font-sans bg-white">
+      <Toaster position="top-center" reverseOrder={false} />
+
       <div className="flex-1 flex items-center justify-center px-8 lg:px-16">
         <div className="w-full max-w-md">
           <div className="mb-10">
@@ -88,10 +96,10 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <label className="text-sm font-semibold text-emerald-900 ml-1">
-              Password
-            </label>
             <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-emerald-900 ml-1">
+                Password
+              </label>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black group-focus-within:text-gray-600 transition-colors" />
                 <input
@@ -118,16 +126,14 @@ export default function LoginPage() {
               disabled={isPending}
             >
               <UserPlus size={18} />
-              {isPending ? "Loging In.." : "Log In"}
+              {isPending ? "Logging In..." : "Log In"}
             </button>
           </form>
         </div>
       </div>
 
+ 
       <div className="hidden lg:flex w-[40%] bg-linear-to-br from-emerald-500 via-emerald-600 to-teal-700 relative overflow-hidden items-center justify-center p-12">
-        <div className="absolute top-[-10%] right-[-10%] w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-[-5%] left-[-5%] w-64 h-64 bg-emerald-400/20 rounded-full blur-2xl" />
-
         <div className="relative z-10 text-center text-white">
           <div className="inline-flex p-3 bg-white/10 backdrop-blur-xl rounded-2xl mb-6 border border-white/20">
             <Sparkles className="w-8 h-8 text-emerald-100" />
@@ -137,21 +143,12 @@ export default function LoginPage() {
             Create an account today and start your journey with our professional
             community.
           </p>
-
           <button
             onClick={() => navigate("/register")}
             className="group px-10 h-13 cursor-pointer rounded-2xl bg-white text-emerald-700 font-bold hover:bg-emerald-50 transition-all shadow-xl flex items-center gap-2 mx-auto"
           >
             Create Account
             <ArrowRight size={18} />
-          </button>
-
-          <button
-            onClick={() => navigate("/")}
-            className="mt-8 cursor-pointer text-emerald-100/70 hover:text-white transition flex items-center gap-2 mx-auto font-medium"
-          >
-            Skip login for now
-            <ArrowRight size={16} />
           </button>
         </div>
       </div>

@@ -26,6 +26,8 @@ import { Link, useNavigate } from "react-router";
 export default function Navbar() {
   const user = useAuthStore((s) => s.user);
 
+  console.log("User", user);
+
   const logout = useAuthStore((s) => s.logout);
 
   const navigate = useNavigate();

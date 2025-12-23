@@ -26,8 +26,6 @@ const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 
 const AddressPage = lazy(() => import("@/pages/AddressPage"));
 
-const BankPage = lazy(() => import("@/pages/BankPage"));
-
 const ProtectedRoute = lazy(() => import("@/routes/protected-route"));
 
 const AccountLayout = lazy(() => import("./components/AccountLayout"));
@@ -80,7 +78,6 @@ const router = createBrowserRouter([
         children: [
           { path: "profile", element: <ProfilePage /> },
           { path: "profile/addresses", element: <AddressPage /> },
-          { path: "profile/bank-details", element: <BankPage /> },
           {
             path: "profile/wish-list",
             element: <WishListPage />,
@@ -115,14 +112,7 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      {
-        path: "bank-details",
-        element: (
-          <ProtectedRoute>
-            <BankPage />
-          </ProtectedRoute>
-        ),
-      },
+
       {
         path: "categories",
         element: <CategoryPage />,

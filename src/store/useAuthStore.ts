@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export interface User {
   id: string;
@@ -11,21 +12,26 @@ export interface User {
 export interface AuthState {
   user: User | null;
   token: string | null;
-  login: (userData: User, accessToken: string) => void;
+  login: (user: User, token: string) => void;
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  token: null,
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      token: null,
 
-  login: (user, token) => {
-    set({ user, token });
-    localStorage.setItem("token", token);
-  },
+      login: (user, token) => {
+        set({ user, token });
+      },
 
-  logout: () => {
-    set({ user: null, token: null });
-    localStorage.removeItem("token");
-  },
-}));
+      logout: () => {
+        set({ user: null, token: null });
+      },
+    }),
+    {
+      name: "auth-storage", 
+    }
+  )
+);

@@ -1,33 +1,21 @@
-import {
-  User,
-  MapPin,
-  Banknote,
-  LogOut,
-  ChevronRight,
-  Heart,
-  Box,
-} from "lucide-react";
+import { User, MapPin, LogOut, ChevronRight, Heart, Box } from "lucide-react";
 
 import { Link, useLocation } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
 
 export default function Sidebar() {
-
   const location = useLocation();
 
   const menu = [
     { name: "Personal Profile", icon: User, path: "/profile" },
     { name: "Saved Addresses", icon: MapPin, path: "/profile/addresses" },
-    { name: "Bank Accounts", icon: Banknote, path: "/profile/bank-details" },
     { name: "Wishlist", icon: Heart, path: "/profile/wish-list" },
     { name: "Orders", icon: Box, path: "/profile/orders" },
   ];
 
   return (
-
     <aside className="w-72 bg-emerald-50/30 border border-emerald-100 rounded-2xl p-6 flex flex-col gap-8 h-screen max-h-[600px] sticky top-5 ml-20">
-    
       <div>
         <h2 className="text-emerald-900 text-sm font-bold uppercase tracking-wider px-4">
           Settings

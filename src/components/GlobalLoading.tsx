@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export default function GlobalLoading() {
   return (
-    <div className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-[#FDFBF7]">
+    <div className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-[#ffffff]">
       <div className="relative flex flex-col items-center">
         <motion.div
           initial={{ opacity: 0, y: 10 }}

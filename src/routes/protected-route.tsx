@@ -5,6 +5,8 @@ import type { ReactNode } from "react";
 export default function ProtectedRoute({ children }: { children: ReactNode }) {
   const token = useAuthStore((s) => s.token);
 
+  console.log("_token", token);
+
   if (!token) return <Navigate to="/login" replace />;
 
   return <>{children}</>;

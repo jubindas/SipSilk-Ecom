@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 
 import {
@@ -16,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { registration } from "@/services/users";
+import toast, { Toaster } from "react-hot-toast";
 
 interface User {
   password: string;
@@ -42,10 +44,15 @@ export default function RegisterPage() {
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });
+      toast.success(`Registeration successfully`);
       navigate("/login");
     },
-    onError: (error) => {
-      console.log("the error is", error);
+    onError: (err: any) => {
+      const errorMessage =
+        err?.response?.data?.message ||
+        "Login failed. Please check your credentials.";
+      toast.error(errorMessage);
+      console.log("the error is", err);
     },
   });
 
@@ -62,6 +69,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex font-sans bg-white">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="hidden lg:flex w-[40%] bg-linear-to-br from-emerald-500 via-emerald-600 to-teal-700 relative overflow-hidden items-center justify-center p-12">
         <div className="absolute top-[-10%] left-[-10%] w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-[-5%] right-[-5%] w-64 h-64 bg-emerald-400/20 rounded-full blur-2xl" />
