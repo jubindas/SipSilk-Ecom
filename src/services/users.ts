@@ -5,7 +5,6 @@ interface User {
   fullName: string;
   email: string;
 }
-
 export const registration = async (user: User) => {
   try {
     const response = await api.post(`/users/register`, user);
@@ -59,7 +58,6 @@ interface BankDetails {
   bankName: string;
   branchName: string;
 }
-
 export const addBankDetails = async (bankDetails: BankDetails) => {
   try {
     const response = await api.post(`/users/bank-details`, bankDetails);
@@ -73,3 +71,40 @@ export const addBankDetails = async (bankDetails: BankDetails) => {
     console.log("the error is", error);
   }
 };
+
+interface changePassword {
+  oldPassword: string;
+  newPassword: string;
+}
+export const changePassword = async (changePass: changePassword) => {
+  try {
+    const response = await api.put("/users/change-password", changePass);
+
+    if (response.status !== 200) {
+      throw new Error("something went wrong try again");
+    }
+
+    return response.data;
+  } catch (error) {
+    console.log("the error is", error);
+  }
+};
+
+interface UpdateBankPayload {
+  bankName: string;
+  accountNumber: string;
+  accountHolderName: string;
+  ifsc: string;
+  branchName: string;
+}
+
+export const updateBankDetails = async (bankDetails: UpdateBankPayload) => {
+  const response = await api.put("/users/bank-details", bankDetails);
+
+  if (response.status !== 200 && response.status !== 204) {
+    throw new Error("Failed to update bank details");
+  }
+
+  return response.data;
+};
+

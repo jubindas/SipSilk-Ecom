@@ -1,7 +1,15 @@
 import GlobalError from "@/components/GlobalError";
+
 import GlobalLoading from "@/components/GlobalLoading";
-import { addBankDetails, getProfile } from "@/services/users";
-import { useQuery } from "@tanstack/react-query";
+
+import {
+  addBankDetails,
+  getProfile,
+  updateBankDetails,
+} from "@/services/users";
+
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import {
   Mail,
   User as UserIcon,
@@ -11,19 +19,21 @@ import {
   Building2,
   CreditCard,
   MapPin,
+  Plus,
+  Pencil,
 } from "lucide-react";
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { useState, useEffect } from "react";
 
 import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
-import SuccessToast from "@/components/SuccessToast";
-import { Plus } from "lucide-react";
-import { useAuthStore } from "@/store/useAuthStore";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function ProfilePage() {
   const queryClient = useQueryClient();
@@ -31,22 +41,14 @@ export default function ProfilePage() {
   const [open, setOpen] = useState(false);
 
   const [bankName, setBankName] = useState("");
+
   const [accountNumber, setAccountNumber] = useState("");
+
   const [accountHolderName, setAccountHolderName] = useState("");
+
   const [ifsc, setIfsc] = useState("");
+
   const [branchName, setBranchName] = useState("");
-
-  const { mutate, isPending, isSuccess } = useMutation({
-    mutationFn: addBankDetails,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-      setOpen(false);
-    },
-  });
-
-  const { user } = useAuthStore();
-
-  console.log("the user is", user);
 
   const {
     data: userProfile,
@@ -57,13 +59,58 @@ export default function ProfilePage() {
     queryFn: getProfile,
   });
 
+  const hasBankDetails = !!userProfile?.bankDetails?.accountNumber;
+
+  useEffect(() => {
+    if (userProfile?.bankDetails) {
+      setBankName(userProfile.bankDetails.bankName || "");
+      setAccountNumber(userProfile.bankDetails.accountNumber || "");
+      setAccountHolderName(userProfile.bankDetails.accountHolderName || "");
+      setIfsc(userProfile.bankDetails.ifsc || "");
+      setBranchName(userProfile.bankDetails.branchName || "");
+    }
+  }, [userProfile]);
+
+  const { mutate: addBank, isPending: addPending } = useMutation({
+    mutationFn: addBankDetails,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      toast.success("Bank details added succesfully");
+      setOpen(false);
+    },
+  });
+
+  const { mutate: updateBank, isPending: updatePending } = useMutation({
+    mutationFn: updateBankDetails,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      toast.success("Bank details updated succesfully");
+      setOpen(false);
+    },
+  });
+
+  const handleBankSubmit = () => {
+    const payload = {
+      bankName,
+      accountNumber,
+      accountHolderName,
+      ifsc,
+      branchName,
+    };
+
+    if (hasBankDetails) {
+      updateBank(payload);
+    } else {
+      addBank(payload);
+    }
+  };
+
   if (isLoading) return <GlobalLoading />;
   if (isError) return <GlobalError />;
 
-  console.log("the user is", userProfile);
-
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto p-4">
+      <Toaster position="top-center" reverseOrder={false} />
       <main className="space-y-6">
         <section className="bg-white border border-emerald-100 rounded-3xl shadow-sm overflow-hidden">
           <div className="h-24 bg-linear-to-r from-emerald-100 to-teal-50" />
@@ -72,7 +119,8 @@ export default function ProfilePage() {
               <div className="relative">
                 <img
                   src={
-                    userProfile?.photo || "https://ui-avatars.com/api/?name="
+                    userProfile?.photo ||
+                    `https://ui-avatars.com/api/?name=${userProfile?.fullName}`
                   }
                   alt="Profile"
                   className="w-32 h-32 rounded-3xl border-4 border-white shadow-xl object-cover bg-emerald-50"
@@ -86,7 +134,7 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="mb-2">
+              <div className="flex-1">
                 <h3 className="text-2xl font-bold text-emerald-900 capitalize">
                   {userProfile.fullName || "User Name"}
                 </h3>
@@ -96,7 +144,7 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <button className="flex ml-110 mb-5 items-center justify-center gap-2 bg-white border border-emerald-100 text-emerald-700 px-5 py-2.5 rounded-xl font-semibold shadow-sm hover:bg-emerald-50 transition-all active:scale-95">
+              <button className="flex items-center gap-2 bg-white border border-emerald-100 text-emerald-700 px-5 py-2.5 rounded-xl font-semibold shadow-sm hover:bg-emerald-50 transition-all active:scale-95">
                 <Lock className="w-4 h-4" />
                 Update Password
               </button>
@@ -127,13 +175,105 @@ export default function ProfilePage() {
         </section>
 
         <section className="bg-white border border-emerald-100 rounded-3xl shadow-sm p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
-              <Building2 className="w-5 h-5" />
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+                <Building2 className="w-5 h-5" />
+              </div>
+              <h2 className="text-xl font-bold text-emerald-950">
+                Bank Information
+              </h2>
             </div>
-            <h2 className="text-xl font-bold text-emerald-950">
-              Bank Information
-            </h2>
+
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <button className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors shadow-md">
+                  {hasBankDetails ? <Pencil size={16} /> : <Plus size={16} />}
+                  {hasBankDetails ? "Update Bank Details" : "Add Bank Details"}
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md bg-white rounded-3xl border-none p-6">
+                <DialogHeader>
+                  <DialogTitle className="text-xl font-bold text-emerald-900">
+                    {hasBankDetails
+                      ? "Update Bank Details"
+                      : "Add Bank Details"}
+                  </DialogTitle>
+                </DialogHeader>
+
+                <div className="space-y-4 py-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-emerald-700 uppercase ml-1">
+                      Bank Name
+                    </label>
+                    <input
+                      className="w-full border border-emerald-100 bg-emerald-50/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                      placeholder="e.g. HDFC Bank"
+                      value={bankName}
+                      onChange={(e) => setBankName(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-emerald-700 uppercase ml-1">
+                      Account Number
+                    </label>
+                    <input
+                      className="w-full border border-emerald-100 bg-emerald-50/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                      placeholder="Enter account number"
+                      value={accountNumber}
+                      onChange={(e) => setAccountNumber(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-emerald-700 uppercase ml-1">
+                      Account Holder
+                    </label>
+                    <input
+                      className="w-full border border-emerald-100 bg-emerald-50/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                      placeholder="Name as per passbook"
+                      value={accountHolderName}
+                      onChange={(e) => setAccountHolderName(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-emerald-700 uppercase ml-1">
+                        IFSC
+                      </label>
+                      <input
+                        className="w-full border border-emerald-100 bg-emerald-50/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                        placeholder="IFSC Code"
+                        value={ifsc}
+                        onChange={(e) => setIfsc(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-emerald-700 uppercase ml-1">
+                        Branch
+                      </label>
+                      <input
+                        className="w-full border border-emerald-100 bg-emerald-50/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                        placeholder="Branch Name"
+                        value={branchName}
+                        onChange={(e) => setBranchName(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  disabled={addPending || updatePending}
+                  onClick={handleBankSubmit}
+                  className="w-full py-3 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 disabled:opacity-50 transition-all shadow-lg active:scale-[0.98]"
+                >
+                  {addPending || updatePending
+                    ? "Saving..."
+                    : hasBankDetails
+                    ? "Update Details"
+                    : "Save Bank Details"}
+                </button>
+              </DialogContent>
+            </Dialog>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
@@ -156,88 +296,12 @@ export default function ProfilePage() {
             <InfoItem
               icon={<MapPin className="w-4 h-4" />}
               label="IFSC / Branch"
-              value={`${userProfile.bankDetails?.ifsc} - ${userProfile.bankDetails?.branchName}`}
+              value={
+                userProfile.bankDetails?.ifsc
+                  ? `${userProfile.bankDetails.ifsc} - ${userProfile.bankDetails.branchName}`
+                  : undefined
+              }
             />
-          </div>
-          {isSuccess && (
-            <SuccessToast message="Bank details added successfully" />
-          )}
-
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
-                <Building2 className="w-5 h-5" />
-              </div>
-              <h2 className="text-xl font-bold text-emerald-950">
-                Bank Information
-              </h2>
-            </div>
-
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <button className="flex items-center gap-2 px-4 py-2 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
-                  <Plus size={16} />
-                  Add Bank
-                </button>
-              </PopoverTrigger>
-
-              <PopoverContent className="w-96 p-5 space-y-4 bg-white">
-                <h3 className="text-lg font-semibold text-emerald-900">
-                  Add Bank Details
-                </h3>
-
-                <input
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  placeholder="Bank Name"
-                  value={bankName}
-                  onChange={(e) => setBankName(e.target.value)}
-                />
-
-                <input
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  placeholder="Account Number"
-                  value={accountNumber}
-                  onChange={(e) => setAccountNumber(e.target.value)}
-                />
-
-                <input
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  placeholder="Account Holder Name"
-                  value={accountHolderName}
-                  onChange={(e) => setAccountHolderName(e.target.value)}
-                />
-
-                <input
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  placeholder="IFSC Code"
-                  value={ifsc}
-                  onChange={(e) => setIfsc(e.target.value)}
-                />
-
-                <input
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  placeholder="Branch Name"
-                  value={branchName}
-                  onChange={(e) => setBranchName(e.target.value)}
-                />
-
-                <button
-                  disabled={isPending}
-                  onClick={() =>
-                    mutate({
-                      bankName,
-                      accountNumber,
-                      accountHolderName,
-                      ifsc,
-                      branchName,
-                    })
-                  }
-                  className="w-full py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-60"
-                >
-                  {isPending ? "Saving..." : "Save Bank Details"}
-                </button>
-              </PopoverContent>
-            </Popover>
           </div>
         </section>
       </main>
