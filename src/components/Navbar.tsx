@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
-
 import { useAuthStore } from "@/store/useAuthStore";
 
 import {
@@ -11,17 +8,10 @@ import {
   NavigationMenuContent,
 } from "@/components/ui/navigation-menu";
 
-import {
-  ShoppingCart,
-  Search,
-  User,
-  Heart,
-  LogOut,
-  Box,
-  Bell,
-} from "lucide-react";
+import { ShoppingCart, User, Heart, LogOut, Box, Bell } from "lucide-react";
 
 import { Link, useNavigate } from "react-router";
+import SearchBar from "./SearchBar";
 
 export default function Navbar() {
   const user = useAuthStore((s) => s.user);
@@ -32,36 +22,9 @@ export default function Navbar() {
 
   const navigate = useNavigate();
 
-  const [search, setSearch] = useState("");
-
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-
   const handleLogout = () => {
     logout();
     navigate("/login");
-  };
-
-  const handleSearch = (value: any) => {
-    setSearch(value);
-
-    if (value.trim() === "") {
-      setSearchResults([]);
-      return;
-    }
-
-    const products = [
-      { id: 1, name: "Organic Green Tea" },
-      { id: 2, name: "Assam Black Tea" },
-      { id: 3, name: "Silk Scarf" },
-    ];
-
-    const filtered = products.filter((p) =>
-      p.name.toLowerCase().includes(value.toLowerCase())
-    );
-
-    setSearchResults(filtered);
   };
 
   const hoverGreen =
@@ -84,36 +47,9 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <div
-          className={`flex items-center bg-gray-50 rounded-xl px-4 py-2.5 w-130 mx-6 shadow-sm border transition-all duration-300 ${
-            isSearchFocused
-              ? "border-green-400 shadow-md ring-2 ring-green-100"
-              : "border-gray-200 hover:border-gray-300"
-          }`}
-        >
-          <Search
-            className={`w-5 h-5 transition-colors duration-200 ${
-              isSearchFocused ? "text-green-600" : "text-gray-400"
-            }`}
-          />
-          <input
-            type="text"
-            placeholder="Search for Products, Brands and More"
-            className="ml-3 bg-transparent outline-none w-full text-gray-700 placeholder:text-gray-400"
-            value={search}
-            onChange={(e) => handleSearch(e.target.value)}
-            onFocus={() => setIsSearchFocused(true)}
-            onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-          />
+        <div>
+          <SearchBar />
         </div>
-
-        {isSearchFocused && searchResults.length > 0 && (
-          <div className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-2 z-50">
-            {searchResults.map((item: any) => (
-              <div>{item.name}</div>
-            ))}
-          </div>
-        )}
 
         <div className="flex items-center gap-4 text-gray-700 font-medium shrink-0">
           <Link

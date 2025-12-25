@@ -1,50 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import GlobalLoading from "@/components/GlobalLoading";
+import { getNewArrivalProducts } from "@/services/homepageProducts";
+import { useQuery } from "@tanstack/react-query";
 import { ShoppingCart, Heart, SearchIcon } from "lucide-react";
 
-export default function NewArrivals() {
+const BASE_URL = "http://127.0.0.1:3000";
 
-  
-  const products = [
-    {
-      id: 1,
-      title: "Handmade Brass Paraat",
-      desc: "Hammered Finish & Pure Brass",
-      image: "blue-tea.jpg",
-      price: 2849,
-      oldPrice: 3400,
-      discount: 16,
-      reviews: 12,
-    },
-    {
-      id: 2,
-      title: "Brass Chapati Box",
-      desc: "Secure Lid, Anti-Bacterial",
-      image: "green-tea.jpg",
-      price: 3499,
-      oldPrice: 3600,
-      discount: 2,
-      reviews: 3,
-    },
-    {
-      id: 3,
-      title: "Copper Lagaan",
-      desc: "Tin coated with Lid",
-      image: "rose-tea.jpg",
-      price: 5499,
-      oldPrice: 6300,
-      discount: 12,
-      reviews: 7,
-    },
-    {
-      id: 4,
-      title: "Pure Brass Water Pot",
-      desc: "Traditional Handmade",
-      image: "smoke-tea.jpg",
-      price: 4299,
-      oldPrice: 4800,
-      discount: 10,
-      reviews: 5,
-    },
-  ];
+export default function NewArrivals() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["newArrivals"],
+    queryFn: getNewArrivalProducts,
+  });
+
+  const products = data?.data || [];
+
+  if (isLoading) return <GlobalLoading />;
 
   return (
     <section className="py-20 bg-[#ffffff]">
@@ -57,29 +27,25 @@ export default function NewArrivals() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {products.map((p) => (
+          {products.map((p: any) => (
             <div
               key={p.id}
               className="group bg-white rounded-4xl border border-green-100/50 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden"
             >
               <div className="relative aspect-square overflow-hidden bg-gray-50">
                 <img
-                  src={p.image}
-                  alt={p.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  src={`${BASE_URL}${p.mainImage}`}
+                  alt={p.productName}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
 
-                 <button className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-full text-slate-400 hover:text-red-500 hover:bg-white transition-all shadow-sm">
+                <button className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-full text-slate-400 hover:text-red-500 hover:bg-white transition-all shadow-sm">
                   <Heart
                     size={18}
                     fill="currentColor"
                     className="fill-transparent hover:fill-red-500"
                   />
                 </button>
-
-                <div className="absolute top-4 left-4 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg z-10 tracking-widest uppercase">
-                  New
-                </div>
 
                 <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-linear-to-t from-black/50 to-transparent flex gap-3">
                   <button className="w-1/2 bg-white py-2.5 cursor-pointer rounded-xl text-slate-900 font-bold text-sm flex items-center justify-center gap-2 hover:bg-green-600 hover:text-white transition-colors">
@@ -94,33 +60,26 @@ export default function NewArrivals() {
                 </div>
               </div>
 
-              <div className="p-6 flex flex-col justify-between h-full bg-white rounded-lg">
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xs font-semibold text-green-700 uppercase tracking-widest ">
-                      {p.title}
-                    </h3>
-                    <div className="flex text-yellow-400 text-xs">★★★★★</div>
-                  </div>
+              <div className="p-6">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-1">
+                  {p.masterCategory?.name}
+                </h3>
 
-                  <span className="text-lg font-semibold text-slate-800 leading-snug mb-3 group-hover:text-green-700 transition-colors line-clamp-2">
-                    {p.desc?.split(",")[0] || "Handcrafted"}
+                <h2 className="text-lg font-semibold text-slate-900 line-clamp-2 mb-2">
+                  {p.productName}
+                </h2>
+
+                <p className="text-sm text-gray-500 line-clamp-2 mb-4">
+                  {p.shortDesc}
+                </p>
+
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl font-bold text-slate-900">
+                    ₹{p.sellingPrice.toLocaleString("en-IN")}
                   </span>
-                  <div className="h-px bg-gray-200 mb-4"></div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl  text-slate-900">
-                        ₹{p.price.toLocaleString("en-IN")}
-                      </span>
-                      <span className="text-base text-gray-400 line-through">
-                        ₹{p.oldPrice.toLocaleString("en-IN")}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-500 text-right">
-                      {p.reviews} verified reviews
-                    </p>
-                  </div>
+                  <span className="text-sm text-gray-400 line-through">
+                    ₹{p.maximumRetailPrice.toLocaleString("en-IN")}
+                  </span>
                 </div>
               </div>
             </div>

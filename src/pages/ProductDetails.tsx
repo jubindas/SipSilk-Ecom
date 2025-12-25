@@ -1,260 +1,308 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-
-import { useParams, useNavigate } from "react-router-dom";
-
-import products from "@/components/productsData";
-
-import { useCartStore } from "@/store/useCartStore";
-
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getProductsByCategory } from "@/services/products";
 import {
-  ChevronLeft,
-  Zap,
+
   Star,
   ShieldCheck,
   RefreshCcw,
   Truck,
-  MessageSquare,
+  ChevronRight,
 } from "lucide-react";
+import GlobalLoading from "@/components/GlobalLoading";
+
+const reviews = [
+  {
+    id: 1,
+    name: "Rahul Sharma",
+    rating: 5,
+    date: "12 Aug 2025",
+    comment:
+      "Excellent performance and build quality. The laptop handles heavy multitasking without any lag.",
+  },
+  {
+    id: 2,
+    name: "Ananya Verma",
+    rating: 4,
+    date: "03 Aug 2025",
+    comment:
+      "Very smooth experience and premium design. Battery life is good but could be slightly better.",
+  },
+  {
+    id: 3,
+    name: "Amit Das",
+    rating: 5,
+    date: "28 Jul 2025",
+    comment:
+      "Perfect for professional work. Display quality is sharp and the keyboard feels great.",
+  },
+  {
+    id: 4,
+    name: "Neha Gupta",
+    rating: 4,
+    date: "20 Jul 2025",
+    comment:
+      "Fast boot time and amazing performance. Worth the price for daily office and coding work.",
+  },
+  {
+    id: 5,
+    name: "Sourav Dey",
+    rating: 3,
+    date: "15 Jul 2025",
+    comment:
+      "Overall good laptop, but it heats a little during long usage. Still satisfied with the purchase.",
+  },
+  {
+    id: 6,
+    name: "Pooja Singh",
+    rating: 5,
+    date: "09 Jul 2025",
+    comment:
+      "Premium look, powerful performance, and excellent display. Highly recommended!",
+  },
+];
+
+const BASE_URL = "http://127.0.0.1:3000";
 
 export default function ProductDetails() {
-  const { id } = useParams();
+  const { productId } = useParams();
 
-  const product = products.find((p) => String(p.id) === String(id));
+  const { data: productbyId, isLoading } = useQuery({
+    queryKey: ["productbyid", productId],
+    queryFn: () => getProductsByCategory(productId),
+  });
 
-  const navigate = useNavigate();
+  const products = productbyId?.data;
+  const [mainMedia, setMainMedia] = useState<string | "video" | null>(null);
 
-  const addToCart = useCartStore((state) => state.addToCart);
+  if (isLoading) return <GlobalLoading />;
+  if (!products)
+    return (
+      <div className="p-20 text-center font-medium">Product not found</div>
+    );
 
-  const reviews = [
-    {
-      id: 1,
-      name: "Rahul Sharma",
-      rating: 5,
-      date: "12 Aug 2025",
-      comment: "Amazing product quality. Totally worth the price.",
-    },
-    {
-      id: 2,
-      name: "Ananya Verma",
-      rating: 4,
-      date: "02 Aug 2025",
-      comment: "Product is good overall. Battery life could be better.",
-    },
-    {
-      id: 3,
-      name: "Amit Das",
-      rating: 3,
-      date: "28 Jul 2025",
-      comment: "Average experience. Expected better build quality.",
-    },
-  ];
-
-  const [mainMedia, setMainMedia] = useState(
-    product ? product.images[0] : null
-  );
-
-  const isVideo = mainMedia === "video";
-
-  if (!product)
-    return <div className="p-10 text-center">Product not found.</div>;
+  const images: string[] = products?.productImages
+    ? JSON.parse(products.productImages)
+    : [];
+  const currentMedia = mainMedia || products.mainImage;
+  const isVideo = currentMedia === "video";
 
   return (
-    <div className="min-h-screen bg-[#fcfdfc] text-slate-700 pb-12">
-      <div className="max-w-6xl mx-auto px-4 py-3">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-emerald-600 hover:text-emerald-700 text-sm font-medium"
-        >
-          <ChevronLeft size={16} /> Back
-        </button>
-      </div>
+    <div className="min-h-screen bg-white text-slate-900 pb-20">
+      <nav className="max-w-7xl mx-auto px-6 py-4 text-xs text-slate-400 uppercase tracking-widest flex items-center gap-2">
+        <span>Shop</span> <ChevronRight size={10} />
+        <span>{products.masterCategory?.name}</span> <ChevronRight size={10} />
+        <span className="text-slate-900 font-semibold">
+          {products.productName}
+        </span>
+      </nav>
 
-      <div className="max-w-6xl mx-auto px-4 grid grid-cols-12 gap-6">
-        <div className="col-span-12 lg:col-span-7 flex flex-col md:flex-row gap-3">
-          <div className="flex md:flex-col gap-2 order-2 md:order-1">
-            {[...product.images, "video"].map((src, index) => (
-              <button
-                key={index}
-                onClick={() => setMainMedia(src)}
-                className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all p-0.5 bg-white ${
-                  mainMedia === src
-                    ? "border-emerald-500"
-                    : "border-slate-100 hover:border-emerald-200"
-                }`}
-              >
-                <img
-                  src={
-                    src === "video"
-                      ? "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
-                      : src
-                  }
-                  className="w-full h-full object-cover rounded-lg"
-                  alt="thumb"
-                />
-              </button>
-            ))}
-          </div>
-
-          <div className="flex-1 bg-white rounded-3xl border border-emerald-50 p-4 shadow-sm flex items-center justify-center order-1 md:order-2 h-[400px]">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 mt-4">
+        <div className="lg:col-span-7 flex flex-col gap-4">
+          <div className="bg-[#f9f9f9] rounded-2xl overflow-hidden aspect-square flex items-center justify-center border border-slate-100">
             {isVideo ? (
               <iframe
                 width="100%"
                 height="100%"
-                className="rounded-xl"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                title="video"
+                src={products.youtubeLink.replace("watch?v=", "embed/")}
+                title="Product video"
+                allowFullScreen
               />
             ) : (
               <img
-                src={mainMedia || ""}
-                className="max-h-full object-contain hover:scale-105 transition-transform"
-                alt={product.title}
+                src={`${BASE_URL}${currentMedia}`}
+                className="w-full h-full object-contain mix-blend-multiply p-8 hover:scale-105 transition-transform duration-700"
+                alt={products.productName}
               />
+            )}
+          </div>
+
+
+          <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
+            <Thumbnail
+              active={currentMedia === products.mainImage}
+              onClick={() => setMainMedia(null)}
+              src={`${BASE_URL}${products.mainImage}`}
+            />
+            {images.map((img, i) => (
+              <Thumbnail
+                key={i}
+                active={currentMedia === img}
+                onClick={() => setMainMedia(img)}
+                src={`${BASE_URL}${img}`}
+              />
+            ))}
+            {products.youtubeLink && (
+              <button
+                onClick={() => setMainMedia("video")}
+                className={`w-20 h-20 rounded-lg border-2 flex items-center justify-center bg-slate-900 text-[10px] text-white font-bold uppercase ${
+                  currentMedia === "video"
+                    ? "border-emerald-500"
+                    : "border-transparent"
+                }`}
+              >
+                Video
+              </button>
             )}
           </div>
         </div>
 
-        <div className="col-span-12 lg:col-span-5 space-y-4">
-          <div className="bg-white rounded-3xl p-6 border border-emerald-50 shadow-sm">
-            <div className="flex justify-between items-start">
-              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-md text-[10px] font-bold uppercase">
-                {product.stock ? "In Stock" : "Low Stock"}
-              </span>
-              <div className="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                <Star size={12} className="fill-emerald-500" /> {product.rating}
-              </div>
+        <div className="lg:col-span-5 flex flex-col">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-[10px] bg-slate-900 text-white px-2 py-0.5 rounded uppercase font-bold tracking-tighter">
+              {products.quantity > 0 ? "In Stock" : "Sold Out"}
+            </span>
+            <div className="flex items-center gap-1 text-sm font-semibold text-amber-500">
+              <Star size={14} className="fill-current" /> 4.8{" "}
+              <span className="text-slate-400 font-normal">(24 Reviews)</span>
             </div>
+          </div>
 
-            <h1 className="text-2xl font-bold text-slate-800 mt-2">
-              {product.title}
-            </h1>
+          <h1 className="text-4xl font-serif text-slate-800 mb-2">
+            {products.productName}
+          </h1>
+          <p className="text-slate-500 text-lg mb-6 leading-relaxed font-light">
+            {products.shortDesc}
+          </p>
 
-            <div className="mt-4">
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-black text-slate-900">
-                  {product.priceDisplay}
+          <div className="flex items-baseline gap-4 mb-8">
+            <span className="text-3xl font-bold">
+              ₹{products.sellingPrice.toLocaleString()}
+            </span>
+            <span className="text-xl text-slate-300 line-through">
+              ₹{products.maximumRetailPrice.toLocaleString()}
+            </span>
+            <span className="text-emerald-600 font-bold text-sm uppercase tracking-tight">
+              Save{" "}
+              {Math.round(
+                ((products.maximumRetailPrice - products.sellingPrice) /
+                  products.maximumRetailPrice) *
+                  100
+              )}
+              % Off
+            </span>
+          </div>
+
+          <div className="space-y-4 mb-10 border-t border-b border-slate-100 py-8">
+            <p className="text-slate-600 leading-relaxed text-sm italic">
+              "{products.longDesc}"
+            </p>
+            <div className="grid grid-cols-2 gap-y-3 text-xs tracking-widest font-semibold text-slate-400">
+              <p>
+                Category:{" "}
+                <span className="text-slate-900">
+                  {products.masterCategory?.name}
                 </span>
-                <span className="text-sm text-slate-400 line-through">
-                  {product.mrp}
+              </p>
+              <p>
+                Size:{" "}
+                <span className="text-slate-900">
+                  {products.size || "Standard"}
                 </span>
-              </div>
-              <p className="text-emerald-600 text-xs font-semibold flex items-center gap-1 mt-1">
-                <Zap size={12} fill="currentColor" /> {product.offer} discount
-                applied
               </p>
             </div>
+          </div>
 
-            <p className="text-slate-500 text-sm leading-relaxed mt-4 line-clamp-3">
-              {product.description}
-            </p>
 
-            <div className="grid grid-cols-3 gap-2 mt-6">
-              {[
-                { icon: Truck, label: "Free Shipping" },
-                { icon: RefreshCcw, label: "Easy Returns" },
-                { icon: ShieldCheck, label: "Secure" },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="flex flex-col items-center p-2 rounded-xl bg-slate-50 border border-slate-100"
-                >
-                  <item.icon size={14} className="text-emerald-600 mb-1" />
-                  <span className="text-[10px] font-medium text-slate-600">
-                    {item.label}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div className="flex flex-col gap-3">
+            <button className="w-full bg-slate-900 text-white py-5 rounded-full font-bold hover:bg-slate-800 transition-all active:scale-[0.98] shadow-xl shadow-slate-200">
+              Add to Bag — ₹{products.sellingPrice.toLocaleString()}
+            </button>
+            <button className="w-full bg-white text-slate-900 border border-slate-200 py-5 rounded-full font-bold hover:bg-slate-50 transition-all">
+              Save to Wishlist
+            </button>
+          </div>
 
-            <div className="grid grid-cols-2 gap-3 mt-6">
-              <button
-                className="py-3 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition shadow-md shadow-emerald-100"
-                onClick={() => {
-                  addToCart(product);
-                  alert("Added!");
-                }}
-              >
-                Add to Cart
-              </button>
-              <button
-                className="py-3 rounded-xl bg-slate-800 text-white text-sm font-bold hover:bg-black transition"
-                onClick={() => {
-                  addToCart(product);
-                  navigate("/cart");
-                }}
-              >
-                Buy Now
-              </button>
-            </div>
+
+          <div className="grid grid-cols-3 gap-4 mt-12 pt-8 border-t border-slate-50">
+            <Feature icon={Truck} label="Free Shipping" />
+            <Feature icon={RefreshCcw} label="30-Day Returns" />
+            <Feature icon={ShieldCheck} label="Secure Payment" />
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 mt-12">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <MessageSquare size={20} className="text-emerald-500" /> Customer
-            Feedback
-          </h2>
-          <button className="text-sm font-bold text-emerald-600 hover:underline">
-            Write a Review
-          </button>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-emerald-900 text-white p-6 rounded-2xl flex flex-col justify-center items-center">
-            <p className="text-4xl font-black">{product.rating}</p>
-            <div className="flex gap-1 my-1">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={14}
-                  className="fill-emerald-400 text-emerald-400"
-                />
-              ))}
-            </div>
-            <p className="text-emerald-200 text-xs mt-1 italic">
-              Total {reviews.length} reviews
+      <section className="max-w-7xl mx-auto px-6 mt-32">
+        <div className="border-b border-slate-200 pb-8 mb-12 flex justify-between items-end">
+          <div>
+            <h2 className="text-3xl font-serif italic mb-2">Guest Feedback</h2>
+            <p className="text-slate-400 text-sm tracking-widest uppercase">
+              What our community says
             </p>
           </div>
+          <div className="text-right">
+            <p className="text-4xl font-bold italic">4.8</p>
+            <div className="flex gap-1 justify-end text-amber-400">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} size={12} fill="currentColor" />
+              ))}
+            </div>
+          </div>
+        </div>
 
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {reviews.map((review) => (
-            <div
-              key={review.id}
-              className="bg-white border border-slate-100 p-5 rounded-2xl shadow-sm hover:border-emerald-100 transition"
-            >
-              <div className="flex justify-between items-start mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 text-xs font-bold uppercase">
-                    {review.name.charAt(0)}
-                  </div>
-                  <span className="text-sm font-bold">{review.name}</span>
-                </div>
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={10}
-                      className={
-                        i < review.rating
-                          ? "fill-emerald-500 text-emerald-500"
-                          : "text-slate-100"
-                      }
-                    />
-                  ))}
-                </div>
+            <div key={review.id} className="group">
+              <div className="flex gap-1 text-amber-400 mb-4 transition-transform group-hover:-translate-y-1">
+                {[...Array(review.rating)].map((_, i) => (
+                  <Star key={i} size={14} fill="currentColor" />
+                ))}
               </div>
-              <p className="text-xs text-slate-500 leading-relaxed italic">
+              <p className="text-slate-700 leading-relaxed mb-6 font-light">
                 "{review.comment}"
               </p>
-              <p className="text-[10px] text-slate-300 mt-3 font-medium uppercase tracking-wider">
-                {review.date}
-              </p>
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold">
+                  {review.name[0]}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-900">
+                    {review.name}
+                  </p>
+                  <p className="text-[10px] text-slate-400 uppercase tracking-tighter">
+                    {review.date}
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
-      </div>
+      </section>
+    </div>
+  );
+}
+
+function Thumbnail({
+  active,
+  onClick,
+  src,
+}: {
+  active: boolean;
+  onClick: () => void;
+  src: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all shrink-0 p-1 bg-white ${
+        active ? "border-slate-900" : "border-slate-100 hover:border-slate-300"
+      }`}
+    >
+      <img src={src} className="w-full h-full object-contain" alt="thumbnail" />
+    </button>
+  );
+}
+
+function Feature({ icon: Icon, label }: { icon: any; label: string }) {
+  return (
+    <div className="flex flex-col items-center text-center gap-2">
+      <Icon size={20} className="text-slate-400 font-light" />
+      <span className="text-[10px] uppercase tracking-widest font-bold text-slate-500">
+        {label}
+      </span>
     </div>
   );
 }

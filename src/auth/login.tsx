@@ -27,13 +27,12 @@ interface LoginUser {
 }
 
 export default function LoginPage() {
-
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const [email, setEmail] = useState("jubin@gmail.com");
-  
+
   const [password, setPassword] = useState("password");
-  
+
   const navigate = useNavigate();
 
   const login = useAuthStore((s) => s.login);
@@ -132,7 +131,6 @@ export default function LoginPage() {
         </div>
       </div>
 
- 
       <div className="hidden lg:flex w-[40%] bg-linear-to-br from-emerald-500 via-emerald-600 to-teal-700 relative overflow-hidden items-center justify-center p-12">
         <div className="relative z-10 text-center text-white">
           <div className="inline-flex p-3 bg-white/10 backdrop-blur-xl rounded-2xl mb-6 border border-white/20">

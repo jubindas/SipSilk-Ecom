@@ -1,61 +1,59 @@
+import { getAllCategories } from "@/services/categories";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import GlobalLoading from "./GlobalLoading";
 
-const categoriesData = [
-  {
-    name: "Mobiles & Tablets",
-    slug: "mobiles",
-    img: "https://i.pinimg.com/736x/ce/ef/4f/ceef4f217da7abdc09629104213085cf.jpg",
-  },
-  {
-    name: "Laptops",
-    slug: "mobiles",
-    img: "https://i.pinimg.com/736x/5b/26/e9/5b26e9fc9f2700d2e1e898821f1fcbdc.jpg",
-  },
-  {
-    name: "Fashion",
-    slug: "mobiles",
-    img: "https://i.pinimg.com/1200x/d3/ef/08/d3ef082cceffe4791ec75a6ef9e449cc.jpg",
-  },
-  {
-    name: "Beauty",
-    slug: "mobiles",
-    img: "https://i.pinimg.com/736x/3b/62/f4/3b62f4a435f957aa3083081fecf39673.jpg",
-  },
-  {
-    name: "Home & Kitchen",
-    slug: "mobiles",
-    img: "https://i.pinimg.com/736x/96/85/f5/9685f59454be32e6cceb1f236f0fffcf.jpg",
-  },
-  {
-    name: "Electronics",
-    slug: "mobiles",
-    img: "https://i.pinimg.com/1200x/e1/22/34/e122343ac7ddb125851689e1fb05cc4a.jpg",
-  },
-  {
-    name: "Sports",
-    slug: "mobiles",
-    img: "https://i.pinimg.com/736x/ff/21/96/ff219690d5723fe50272c4ca2e4ca352.jpg",
-  },
-  {
-    name: "Kids",
-    slug: "mobiles",
-    img: "https://i.pinimg.com/736x/f8/29/ef/f829efb8940140c34a116091a7f74b6e.jpg",
-  },
-];
+interface Categories {
+  id: string;
+  img: string;
+  name: string;
+  slug: string;
+  description: string;
+}
+
+const DEFAULT_IMG =
+  "https://i.pinimg.com/736x/0b/e7/53/0be753fb55b0e053f6a769b360b0489b.jpg";
 
 export default function Categories() {
+  const {
+    data: categories,
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getAllCategories,
+    staleTime: 5 * 60 * 1000,
+  });
+  console.log("the categories are", categories);
+
+  if (isLoading || isFetching) {
+    return <GlobalLoading />;
+  }
+
+  const list = Array.isArray(categories) // isse category array hai ya nahi cnfrm karke kisting karte he
+    ? categories
+    : categories?.categories ?? [];
+
+  if (list.length === 0 && !isFetching) {
+    return (
+      <div className="flex justify-center items-center h-[50vh] text-gray-500">
+        No categories found
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
-        {categoriesData.map((cat) => (
+        {list.map((cat: Categories) => (
           <Link
             key={cat.slug}
-            to={`/categories/${cat.slug}`}
+            to={`/categories/${cat.id}`}
             className="group bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-2xl transition-all"
           >
             <div className="w-full h-40 overflow-hidden">
               <img
-                src={cat.img}
+                src={cat?.img || DEFAULT_IMG}
                 alt={cat.name}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
